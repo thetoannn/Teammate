@@ -108,7 +108,6 @@ const CanvasList: React.FC = () => {
                   key={canvas.id}
                   className="
                   flex-shrink-0 w-[230px] h-[150px]
-                  /* ép UI bên trong CanvasCard bằng child selectors, không đổi content */
                   [&>*]:w-full [&>*]:h-full
                   [&>*]:rounded-xl
                   [&>*]:overflow-hidden

@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import NotLoginForm from "../components/NotLoginForm";
 import AgentList from "../components/AgentList";
 import DataDirect from "../ProductListUI/DataProduct/DataDirect";
@@ -22,6 +22,11 @@ const SideBarChat: FC = () => {
   const { isAuthenticated, user } = useAuth();
   const { avatarUrl } = useAvatarUrl(user?.picture);
   const { planName } = useCurrentPlanName();
+  const { pathname, search } = useLocation();
+  const sp = new URLSearchParams(search);
+
+  const forcedAgent =
+    sp.get("agent") || (pathname === "/media-agent" ? "media-agent" : undefined);
 
   const toggleForm = () => {
     setShowForm(!showForm);
@@ -74,14 +79,14 @@ const SideBarChat: FC = () => {
             <div className="">
               <div className="mb-[20px] mt-[35px]">
                 <Link
-                    to="/"
-                    className="flex items-center py-0 justify-center leading-[27px] mb-1 relative box-border w-[41px] h-[41px] rounded-[10px] group bg-[#313131] hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer "
+                  to="/"
+                  className="flex items-center py-0 justify-center leading-[27px] mb-1 relative box-border w-[41px] h-[41px] rounded-[10px] group bg-[#313131] hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer "
                 >
                   <div className=" block text-white flex justify-center items-center pt-1 pb-[5px]">
                     <img
-                        className="w-[23px] h-[23px] pb-px transform transition-transform duration-300 ease-in-out group-hover:scale-[1]"
-                        src={homeIconSide}
-                        alt="iconHome"
+                      className="w-[23px] h-[23px] pb-px transform transition-transform duration-300 ease-in-out group-hover:scale-[1]"
+                      src={homeIconSide}
+                      alt="iconHome"
                     />
                   </div>
                 </Link>
@@ -92,14 +97,14 @@ const SideBarChat: FC = () => {
 
               <div className="mb-[20px]">
                 <button
-                    type="button"
-                    className="flex items-center justify-center leading-[27px] mb-1 relative hover:bg-[#313131] box-border rounded-[9px] group hover:scale-105 transition-transform duration-300 ease-in-out  cursor-pointer"
+                  type="button"
+                  className="flex items-center justify-center leading-[27px] mb-1 relative hover:bg-[#313131] box-border rounded-[9px] group hover:scale-105 transition-transform duration-300 ease-in-out  cursor-pointer"
                 >
                   <div className="icon block text-white flex justify-center items-center  w-[41px] h-[41px]">
                     <img
-                        className="line group-hover:scale-[1.2]  transition-all duration-300 ease-in-out dark:text-white w-[22px] h-[22px]"
-                        src={aboutIconSide}
-                        alt="iconAbout"
+                      className="line group-hover:scale-[1.2]  transition-all duration-300 ease-in-out dark:text-white w-[22px] h-[22px]"
+                      src={aboutIconSide}
+                      alt="iconAbout"
                     />
                   </div>
                 </button>
@@ -110,14 +115,14 @@ const SideBarChat: FC = () => {
 
               <div>
                 <button
-                    type="button"
-                    className="flex items-center py-0 justify-center leading-[27px] mb-1 relative box-border rounded-[10px] group hover:bg-[#313131] hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer"
+                  type="button"
+                  className="flex items-center py-0 justify-center leading-[27px] mb-1 relative box-border rounded-[10px] group hover:bg-[#313131] hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer"
                 >
                   <div className="icon block text-white flex justify-center items-center p-1 w-[41px] h-[41px]">
                     <img
-                        src={contactIconSide}
-                        alt="logo-company"
-                        className="transform transition-transform duration-300 ease-in-out group-hover:scale-[1.2] w-[21px] h-[21px]"
+                      src={contactIconSide}
+                      alt="logo-company"
+                      className="transform transition-transform duration-300 ease-in-out group-hover:scale-[1.2] w-[21px] h-[21px]"
                     />
                   </div>
                 </button>
@@ -131,7 +136,7 @@ const SideBarChat: FC = () => {
             </div>
 
             <div className="mb-[18px]">
-              <AgentList />
+              <AgentList forcedAgent={forcedAgent} />
             </div>
           </div>
 
@@ -158,8 +163,8 @@ const SideBarChat: FC = () => {
                       {user.name
                         ? user.name.charAt(0).toUpperCase()
                         : user.email
-                        ? user.email.charAt(0).toUpperCase()
-                        : "U"}
+                          ? user.email.charAt(0).toUpperCase()
+                          : "U"}
                     </div>
                   )
                 ) : (

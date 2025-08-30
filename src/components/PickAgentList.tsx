@@ -44,7 +44,7 @@ const PickAgentList: React.FC<PickAgentListProps> = ({
     {
       icon: renderIconSide,
       name: "Media Creator Agent",
-      link: "/chat?tool=media-ai",
+      link: "/media-agent",
     },
   ];
 

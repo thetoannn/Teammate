@@ -168,13 +168,13 @@ const App: FC = () => {
 
           {/* Home routes */}
           <Route
-  path="/media-agent"
-  element={
-    <AppLayout>
-      <Home />
-    </AppLayout>
-  }
-/>
+            path="/media-agent"
+            element={
+              <AppLayout>
+                <Home />
+              </AppLayout>
+            }
+          />
 
           {/* Settings routes */}
           <Route

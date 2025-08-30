@@ -536,44 +536,46 @@ const ChatTextarea: React.FC<ChatTextareaProps> = ({
             <AnimatePresence>
               {showQuantitySlider && (
                 <motion.div
-                  className="absolute bottom-full mb-2 left-0  bg-background border border-border bg-[#353535] rounded-lg p-4 shadow-lg min-w-48"
+                  className="absolute bottom-full mb-2 left-0 bg-[#2c2c2c] text-white border border-[#555] rounded-xl p-4 shadow-xl min-w-56"
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
                 >
-                  <div className="flex flex-col gap-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">
-                        {t("chat:textarea.quantity", "Image Quantity")}
-                      </span>
-                      <span className="text-sm text-muted-foreground">
+                  <div className="text-sm font-medium mb-2">Số lượng mẫu</div>
+
+                  <div className="flex justify-center mb-4">
+                    <div className="relative w-14 h-14 flex items-center justify-center rounded-xl bg-[#4374FF]">
+                      <div className="text-white font-semibold text-lg z-10">
                         {quantity}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs text-muted-foreground">1</span>
-                      <input
-                        type="range"
-                        min="1"
-                        max={MAX_QUANTITY}
-                        value={quantity}
-                        onChange={(e) => setQuantity(Number(e.target.value))}
-                        className="flex-1 h-2 bg-muted rounded-lg appearance-none cursor-pointer
-                                  [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4
-                                  [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary
-                                  [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-sm
-                                  [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full
-                                  [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-0"
-                      />
-                      <span className="text-xs text-muted-foreground">
-                        {MAX_QUANTITY}
-                      </span>
+                      </div>
+
+                      <div
+                        className="absolute w-full h-full rounded-xl border-2 border-dashed border-blue-400 opacity-80 scale-110 z-0"
+                        style={{
+                          transform:
+                            "rotate(-12deg) translateX(-10px) translateY(-2px)",
+                        }}
+                      ></div>
                     </div>
                   </div>
-                  {/* Arrow pointing down */}
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-border"></div>
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-background translate-y-[-1px]"></div>
+
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs">1</span>
+                    <input
+                      type="range"
+                      min="1"
+                      max={MAX_QUANTITY}
+                      value={quantity}
+                      onChange={(e) => setQuantity(Number(e.target.value))}
+                      className="flex-1 appearance-none h-2 bg-[#555] rounded-full cursor-pointer
+      [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5
+      [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#4374FF] [&::-webkit-slider-thumb]:shadow
+      [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full
+      [&::-moz-range-thumb]:bg-[#4374FF] [&::-moz-range-thumb]:border-none"
+                    />
+                    <span className="text-xs">{MAX_QUANTITY}</span>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>

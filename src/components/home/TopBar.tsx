@@ -14,18 +14,13 @@ export default function TopBar({ title = "Media Creator Agent" }: TopBarProps) {
   const navigate = useNavigate();
 
   return (
-    <header
-      className="sticky top-0 z-50 text-white py-1 pl-[86px]"
-      style={{ backgroundColor: "#1F1F1F" }}
-    >
-      <div className="flex items-center justify-between ml-[-85px]">
-        <div className="w-[85px]" />
-
-        <div className="flex-1 flex justify-center items-center relative">
+    <header className="sticky top-0 z-50 text-white py-1 bg-[#1F1F1F]">
+      <div className="flex items-center justify-between px-4">
+        <div className="flex-1 flex justify-center items-center">
           <NameAgentHeader agentName={title} />
         </div>
 
-        <div className="flex items-center gap-2 pr-4">
+        <div className="flex items-center gap-2">
           <Button
             variant="ghost"
             size="sm"
