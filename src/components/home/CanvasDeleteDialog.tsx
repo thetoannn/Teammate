@@ -30,17 +30,33 @@ const CanvasDeleteDialog: React.FC<CanvasDeleteDialogProps> = ({
 
   return (
     <Dialog open={show} onOpenChange={setShow}>
+      {/* Trigger: nếu không truyền children thì dùng nút mặc định và CHẶN nổi bọt */}
       <DialogTrigger asChild>
         {children ? (
           children
         ) : (
-          <Button variant="destructive" size="icon" className={className}>
+          <Button
+            variant="destructive"
+            size="icon"
+            className={className}
+            type="button"
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
+          >
             <Trash2 className="w-4 h-4" />
           </Button>
         )}
       </DialogTrigger>
 
-      <CommonDialogContent open={show}>
+      {/* Content: chặn click ra ngoài & các sự kiện đóng gây “rơi xuyên” */}
+      <CommonDialogContent
+        open={show}
+        /* Các prop dưới đây phải được forward vào Radix <DialogContent> bên trong CommonDialogContent */
+        onInteractOutside={(e: any) => e.preventDefault()}
+        onPointerDownOutside={(e: any) => e.preventDefault()}
+        onEscapeKeyDown={(e: any) => e.stopPropagation()}
+        onCloseAutoFocus={(e: any) => e.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>{t('canvas:deleteDialog.title')}</DialogTitle>
         </DialogHeader>
@@ -50,10 +66,28 @@ const CanvasDeleteDialog: React.FC<CanvasDeleteDialogProps> = ({
         </DialogDescription>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => setShow(false)}>
+          <Button
+            variant="outline"
+            type="button"
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation()
+              setShow(false)
+            }}
+          >
             {t('canvas:deleteDialog.cancel')}
           </Button>
-          <Button variant="destructive" onClick={() => handleDeleteCanvas()}>
+
+          <Button
+            variant="destructive"
+            type="button"
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={async (e) => {
+              e.stopPropagation()
+              await handleDeleteCanvas()
+              // setShow(false) sẽ được gọi trong handleDeleteCanvas hoặc ở nơi bạn đang gọi
+            }}
+          >
             {t('canvas:deleteDialog.delete')}
           </Button>
         </DialogFooter>

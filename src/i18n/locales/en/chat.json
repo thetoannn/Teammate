@@ -4,7 +4,7 @@
   "insufficientBalance": "Insufficient Balance",
   "insufficientBalanceDescription": "Your credits are depleted. Please recharge to continue.",
   "textarea": {
-    "placeholder": "Enter your design requirements",
+    "placeholder": "Bắt đầu với một ý tưởng hoặc mẫu sẵn có",
     "selectModel": "Please select a text model! Go to Settings to set your API keys if you haven't done so.",
     "selectTool": "Please go to settings to add image or video generation tools, or you won't be able to generate any images or videos!!",
     "enterPrompt": "Please enter a prompt",

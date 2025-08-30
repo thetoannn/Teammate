@@ -1,19 +1,19 @@
-import { cancelChat } from '@/api/chat'
-import { cancelMagicGenerate } from '@/api/magic'
-import { uploadImage } from '@/api/upload'
-import { Button } from '@/components/ui/button'
-import { useConfigs } from '@/contexts/configs'
+import { cancelChat } from "@/api/chat";
+import { cancelMagicGenerate } from "@/api/magic";
+import { uploadImage } from "@/api/upload";
+import { Button } from "@/components/ui/button";
+import { useConfigs } from "@/contexts/configs";
 import {
   eventBus,
   TCanvasAddImagesToChatEvent,
   TMaterialAddImagesToChatEvent,
-} from '@/lib/event'
-import { cn, dataURLToFile } from '@/lib/utils'
-import { Message, MessageContent, Model } from '@/types/types'
-import { ModelInfo, ToolInfo } from '@/api/model'
-import { useMutation } from '@tanstack/react-query'
-import { useDrop } from 'ahooks'
-import { produce } from 'immer'
+} from "@/lib/event";
+import { cn, dataURLToFile } from "@/lib/utils";
+import { Message, MessageContent, Model } from "@/types/types";
+import { ModelInfo, ToolInfo } from "@/api/model";
+import { useMutation } from "@tanstack/react-query";
+import { useDrop } from "ahooks";
+import { produce } from "immer";
 import {
   ArrowUp,
   Loader2,
@@ -23,38 +23,38 @@ import {
   RectangleVertical,
   ChevronDown,
   Hash,
-} from 'lucide-react'
-import { AnimatePresence, motion } from 'motion/react'
-import Textarea, { TextAreaRef } from 'rc-textarea'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { toast } from 'sonner'
-import ModelSelectorV2 from './ModelSelectorV2'
-import ModelSelectorV3 from './ModelSelectorV3'
-import { useAuth } from '@/contexts/AuthContext'
-import { useBalance } from '@/hooks/use-balance'
-import { BASE_API_URL } from '@/constants'
+} from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import Textarea, { TextAreaRef } from "rc-textarea";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+import ModelSelectorV2 from "./ModelSelectorV2";
+import ModelSelectorV3 from "./ModelSelectorV3";
+import { useAuth } from "@/contexts/AuthContext";
+import { useBalance } from "@/hooks/use-balance";
+import { BASE_API_URL } from "@/constants";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from "@/components/ui/dropdown-menu";
 
 type ChatTextareaProps = {
-  pending: boolean
-  className?: string
-  messages: Message[]
-  sessionId?: string
+  pending: boolean;
+  className?: string;
+  messages: Message[];
+  sessionId?: string;
   onSendMessages: (
     data: Message[],
     configs: {
-      textModel: Model
-      toolList: ToolInfo[]
+      textModel: Model;
+      toolList: ToolInfo[];
     }
-  ) => void
-  onCancelChat?: () => void
-}
+  ) => void;
+  onCancelChat?: () => void;
+};
 
 const ChatTextarea: React.FC<ChatTextareaProps> = ({
   pending,
@@ -64,56 +64,60 @@ const ChatTextarea: React.FC<ChatTextareaProps> = ({
   onSendMessages,
   onCancelChat,
 }) => {
-  const { t } = useTranslation()
-  const { authStatus } = useAuth()
-  const { textModel, selectedTools, setShowLoginDialog } = useConfigs()
-  const { balance } = useBalance()
-  const [prompt, setPrompt] = useState('')
-  const textareaRef = useRef<TextAreaRef>(null)
+  const { t } = useTranslation();
+  const { authStatus } = useAuth();
+  const { textModel, selectedTools, setShowLoginDialog } = useConfigs();
+  const { balance } = useBalance();
+  const [prompt, setPrompt] = useState("");
+  const textareaRef = useRef<TextAreaRef>(null);
   const [images, setImages] = useState<
     {
-      file_id: string
-      width: number
-      height: number
+      file_id: string;
+      width: number;
+      height: number;
     }[]
-  >([])
-  const [isFocused, setIsFocused] = useState(false)
-  const [selectedAspectRatio, setSelectedAspectRatio] = useState<string>('auto')
-  const [quantity, setQuantity] = useState<number>(1)
-  const [showQuantitySlider, setShowQuantitySlider] = useState(false)
-  const quantitySliderRef = useRef<HTMLDivElement>(null)
-  const MAX_QUANTITY = 30
+  >([]);
+  const [isFocused, setIsFocused] = useState(false);
+  const [selectedAspectRatio, setSelectedAspectRatio] =
+    useState<string>("auto");
+  const [quantity, setQuantity] = useState<number>(1);
+  const [showQuantitySlider, setShowQuantitySlider] = useState(false);
+  const quantitySliderRef = useRef<HTMLDivElement>(null);
+  const MAX_QUANTITY = 30;
 
-  const imageInputRef = useRef<HTMLInputElement>(null)
+  const imageInputRef = useRef<HTMLInputElement>(null);
 
   // 充值按钮组件
-  const RechargeContent = useCallback(() => (
-    <div className="flex items-center justify-between gap-3">
-      <span className="text-sm text-muted-foreground flex-1">
-        {t('chat:insufficientBalanceDescription')}
-      </span>
-      <Button
-        size="sm"
-        variant="outline"
-        className="shrink-0"
-        onClick={() => {
-          const billingUrl = `${BASE_API_URL}/billing`
-          if (window.electronAPI?.openBrowserUrl) {
-            window.electronAPI.openBrowserUrl(billingUrl)
-          } else {
-            window.open(billingUrl, '_blank')
-          }
-        }}
-      >
-        {t('common:auth.recharge')}
-      </Button>
-    </div>
-  ), [t])
+  const RechargeContent = useCallback(
+    () => (
+      <div className="flex items-center justify-between gap-3">
+        <span className="text-sm text-muted-foreground flex-1">
+          {t("chat:insufficientBalanceDescription")}
+        </span>
+        <Button
+          size="sm"
+          variant="outline"
+          className="shrink-0"
+          onClick={() => {
+            const billingUrl = `${BASE_API_URL}/billing`;
+            if (window.electronAPI?.openBrowserUrl) {
+              window.electronAPI.openBrowserUrl(billingUrl);
+            } else {
+              window.open(billingUrl, "_blank");
+            }
+          }}
+        >
+          {t("common:auth.recharge")}
+        </Button>
+      </div>
+    ),
+    [t]
+  );
 
   const { mutate: uploadImageMutation } = useMutation({
     mutationFn: (file: File) => uploadImage(file),
     onSuccess: (data) => {
-      console.log('🦄uploadImageMutation onSuccess', data)
+      console.log("🦄uploadImageMutation onSuccess", data);
       setImages((prev) => [
         ...prev,
         {
@@ -121,134 +125,137 @@ const ChatTextarea: React.FC<ChatTextareaProps> = ({
           width: data.width,
           height: data.height,
         },
-      ])
+      ]);
     },
     onError: (error) => {
-      console.error('🦄uploadImageMutation onError', error)
-      toast.error('Failed to upload image', {
+      console.error("🦄uploadImageMutation onError", error);
+      toast.error("Failed to upload image", {
         description: <div>{error.toString()}</div>,
-      })
+      });
     },
-  })
+  });
 
   const handleImagesUpload = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const files = e.target.files
+      const files = e.target.files;
       if (files) {
         for (const file of files) {
-          uploadImageMutation(file)
+          uploadImageMutation(file);
         }
       }
     },
     [uploadImageMutation]
-  )
+  );
 
   const handleCancelChat = useCallback(async () => {
     if (sessionId) {
       // 同时取消普通聊天和魔法生成任务
-      await Promise.all([cancelChat(sessionId), cancelMagicGenerate(sessionId)])
+      await Promise.all([
+        cancelChat(sessionId),
+        cancelMagicGenerate(sessionId),
+      ]);
     }
-    onCancelChat?.()
-  }, [sessionId, onCancelChat])
+    onCancelChat?.();
+  }, [sessionId, onCancelChat]);
 
   // Send Prompt
   const handleSendPrompt = useCallback(async () => {
-    if (pending) return
+    if (pending) return;
 
     // 检查是否使用 Jaaz 服务
     const isUsingJaaz =
-      textModel?.provider === 'jaaz' ||
-      selectedTools?.some((tool) => tool.provider === 'jaaz')
+      textModel?.provider === "jaaz" ||
+      selectedTools?.some((tool) => tool.provider === "jaaz");
     // console.log('👀isUsingJaaz', textModel, selectedTools, isUsingJaaz)
 
     // 只有当使用 Jaaz 服务且余额为 0 时才提醒充值
     if (authStatus.is_logged_in && isUsingJaaz && parseFloat(balance) <= 0) {
-      toast.error(t('chat:insufficientBalance'), {
+      toast.error(t("chat:insufficientBalance"), {
         description: <RechargeContent />,
         duration: 10000, // 10s，给用户更多时间操作
-      })
-      return
+      });
+      return;
     }
 
     if (!textModel) {
-      toast.error(t('chat:textarea.selectModel'))
+      toast.error(t("chat:textarea.selectModel"));
       if (!authStatus.is_logged_in) {
-        setShowLoginDialog(true)
+        setShowLoginDialog(true);
       }
-      return
+      return;
     }
 
     if (!selectedTools || selectedTools.length === 0) {
-      toast.warning(t('chat:textarea.selectTool'))
+      toast.warning(t("chat:textarea.selectTool"));
     }
 
-    let text_content: MessageContent[] | string = prompt
-    if (prompt.length === 0 || prompt.trim() === '') {
-      toast.error(t('chat:textarea.enterPrompt'))
-      return
+    let text_content: MessageContent[] | string = prompt;
+    if (prompt.length === 0 || prompt.trim() === "") {
+      toast.error(t("chat:textarea.enterPrompt"));
+      return;
     }
 
     // Add aspect ratio and quantity information if not default values
-    let additionalInfo = ''
-    if (selectedAspectRatio !== 'auto') {
-      additionalInfo += `<aspect_ratio>${selectedAspectRatio}</aspect_ratio>\n`
+    let additionalInfo = "";
+    if (selectedAspectRatio !== "auto") {
+      additionalInfo += `<aspect_ratio>${selectedAspectRatio}</aspect_ratio>\n`;
     }
     if (quantity !== 1) {
-      additionalInfo += `<quantity>${quantity}</quantity>\n`
+      additionalInfo += `<quantity>${quantity}</quantity>\n`;
     }
 
     if (additionalInfo) {
-      text_content = text_content + '\n\n' + additionalInfo
+      text_content = text_content + "\n\n" + additionalInfo;
     }
 
     if (images.length > 0) {
-      text_content += `\n\n<input_images count="${images.length}">`
+      text_content += `\n\n<input_images count="${images.length}">`;
       images.forEach((image, index) => {
-        text_content += `\n<image index="${index + 1}" file_id="${image.file_id}" width="${image.width}" height="${image.height}" />`
-      })
-      text_content += `\n</input_images>`
+        text_content += `\n<image index="${index + 1}" file_id="${image.file_id}" width="${image.width}" height="${image.height}" />`;
+      });
+      text_content += `\n</input_images>`;
     }
 
     // Fetch images as base64
     const imagePromises = images.map(async (image) => {
-      const response = await fetch(`/api/file/${image.file_id}`)
-      const blob = await response.blob()
+      const response = await fetch(`/api/file/${image.file_id}`);
+      const blob = await response.blob();
       return new Promise<string>((resolve) => {
-        const reader = new FileReader()
-        reader.onloadend = () => resolve(reader.result as string)
-        reader.readAsDataURL(blob)
-      })
-    })
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.readAsDataURL(blob);
+      });
+    });
 
-    const base64Images = await Promise.all(imagePromises)
+    const base64Images = await Promise.all(imagePromises);
 
     const final_content = [
       {
-        type: 'text',
+        type: "text",
         text: text_content as string,
       },
       ...images.map((image, index) => ({
-        type: 'image_url',
+        type: "image_url",
         image_url: {
           url: base64Images[index],
         },
       })),
-    ] as MessageContent[]
+    ] as MessageContent[];
 
     const newMessage = messages.concat([
       {
-        role: 'user',
+        role: "user",
         content: final_content,
       },
-    ])
+    ]);
 
-    setImages([])
-    setPrompt('')
+    setImages([]);
+    setPrompt("");
 
     onSendMessages(newMessage, {
       textModel: textModel,
       toolList: selectedTools && selectedTools.length > 0 ? selectedTools : [],
-    })
+    });
   }, [
     pending,
     textModel,
@@ -264,40 +271,40 @@ const ChatTextarea: React.FC<ChatTextareaProps> = ({
     setShowLoginDialog,
     balance,
     RechargeContent,
-  ])
+  ]);
 
   // Drop Area
-  const dropAreaRef = useRef<HTMLDivElement>(null)
-  const [isDragOver, setIsDragOver] = useState(false)
+  const dropAreaRef = useRef<HTMLDivElement>(null);
+  const [isDragOver, setIsDragOver] = useState(false);
 
   const handleFilesDrop = useCallback(
     (files: File[]) => {
       for (const file of files) {
-        uploadImageMutation(file)
+        uploadImageMutation(file);
       }
     },
     [uploadImageMutation]
-  )
+  );
 
   useDrop(dropAreaRef, {
     onDragOver() {
-      setIsDragOver(true)
+      setIsDragOver(true);
     },
     onDragLeave() {
-      setIsDragOver(false)
+      setIsDragOver(false);
     },
     onDrop() {
-      setIsDragOver(false)
+      setIsDragOver(false);
     },
     onFiles: handleFilesDrop,
-  })
+  });
 
   useEffect(() => {
     const handleAddImagesToChat = (data: TCanvasAddImagesToChatEvent) => {
       data.forEach(async (image) => {
         if (image.base64) {
-          const file = dataURLToFile(image.base64, image.fileId)
-          uploadImageMutation(file)
+          const file = dataURLToFile(image.base64, image.fileId);
+          uploadImageMutation(file);
         } else {
           setImages(
             produce((prev) => {
@@ -305,14 +312,14 @@ const ChatTextarea: React.FC<ChatTextareaProps> = ({
                 file_id: image.fileId,
                 width: image.width,
                 height: image.height,
-              })
+              });
             })
-          )
+          );
         }
-      })
+      });
 
-      textareaRef.current?.focus()
-    }
+      textareaRef.current?.focus();
+    };
 
     const handleMaterialAddImagesToChat = async (
       data: TMaterialAddImagesToChatEvent
@@ -320,31 +327,31 @@ const ChatTextarea: React.FC<ChatTextareaProps> = ({
       data.forEach(async (image: TMaterialAddImagesToChatEvent[0]) => {
         // Convert file path to blob and upload
         try {
-          const fileUrl = `/api/serve_file?file_path=${encodeURIComponent(image.filePath)}`
-          const response = await fetch(fileUrl)
-          const blob = await response.blob()
+          const fileUrl = `/api/serve_file?file_path=${encodeURIComponent(image.filePath)}`;
+          const response = await fetch(fileUrl);
+          const blob = await response.blob();
           const file = new File([blob], image.fileName, {
             type: `image/${image.fileType}`,
-          })
-          uploadImageMutation(file)
+          });
+          uploadImageMutation(file);
         } catch (error) {
-          console.error('Failed to load image from material:', error)
-          toast.error('Failed to load image from material', {
+          console.error("Failed to load image from material:", error);
+          toast.error("Failed to load image from material", {
             description: `${error}`,
-          })
+          });
         }
-      })
+      });
 
-      textareaRef.current?.focus()
-    }
+      textareaRef.current?.focus();
+    };
 
-    eventBus.on('Canvas::AddImagesToChat', handleAddImagesToChat)
-    eventBus.on('Material::AddImagesToChat', handleMaterialAddImagesToChat)
+    eventBus.on("Canvas::AddImagesToChat", handleAddImagesToChat);
+    eventBus.on("Material::AddImagesToChat", handleMaterialAddImagesToChat);
     return () => {
-      eventBus.off('Canvas::AddImagesToChat', handleAddImagesToChat)
-      eventBus.off('Material::AddImagesToChat', handleMaterialAddImagesToChat)
-    }
-  }, [uploadImageMutation])
+      eventBus.off("Canvas::AddImagesToChat", handleAddImagesToChat);
+      eventBus.off("Material::AddImagesToChat", handleMaterialAddImagesToChat);
+    };
+  }, [uploadImageMutation]);
 
   // Close quantity slider when clicking outside
   useEffect(() => {
@@ -353,35 +360,35 @@ const ChatTextarea: React.FC<ChatTextareaProps> = ({
         quantitySliderRef.current &&
         !quantitySliderRef.current.contains(event.target as Node)
       ) {
-        setShowQuantitySlider(false)
+        setShowQuantitySlider(false);
       }
-    }
+    };
 
     if (showQuantitySlider) {
-      document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [showQuantitySlider])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showQuantitySlider]);
 
   return (
     <motion.div
       ref={dropAreaRef}
       className={cn(
-        'w-full flex flex-col items-center border border-primary/20 rounded-2xl p-3 hover:border-primary/40 transition-all duration-300 cursor-text gap-5 bg-background/80 backdrop-blur-xl relative',
-        isFocused && 'border-primary/40',
+        "w-full flex flex-col items-center border border-primary/20 rounded-2xl p-3 hover:border-primary/40 transition-all duration-300 cursor-text gap-5 bg-background/80 backdrop-blur-xl relative",
+        isFocused && "border-primary/40",
         className
       )}
       style={{
         boxShadow: isFocused
-          ? '0 0 0 4px color-mix(in oklab, var(--primary) 10%, transparent)'
-          : 'none',
+          ? "0 0 0 4px color-mix(in oklab, var(--primary) 10%, transparent)"
+          : "none",
       }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.3, ease: 'linear' }}
+      transition={{ duration: 0.3, ease: "linear" }}
       onClick={() => textareaRef.current?.focus()}
     >
       <AnimatePresence>
@@ -391,7 +398,7 @@ const ChatTextarea: React.FC<ChatTextareaProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2, ease: 'easeInOut' }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
           >
             <div className="flex items-center justify-center h-full">
               <p className="text-sm text-muted-foreground">
@@ -407,9 +414,9 @@ const ChatTextarea: React.FC<ChatTextareaProps> = ({
           <motion.div
             className="flex items-center gap-2 w-full"
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2, ease: 'easeInOut' }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
           >
             {images.map((image) => (
               <motion.div
@@ -418,7 +425,7 @@ const ChatTextarea: React.FC<ChatTextareaProps> = ({
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.2, ease: 'easeInOut' }}
+                transition={{ duration: 0.2, ease: "easeInOut" }}
               >
                 <img
                   key={image.file_id}
@@ -448,16 +455,16 @@ const ChatTextarea: React.FC<ChatTextareaProps> = ({
       <Textarea
         ref={textareaRef}
         className="w-full h-full border-none outline-none resize-none"
-        placeholder={t('chat:textarea.placeholder')}
+        placeholder={t("chat:textarea.placeholder")}
         value={prompt}
         autoSize
         onChange={(e) => setPrompt(e.target.value)}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         onKeyDown={(e) => {
-          if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault()
-            handleSendPrompt()
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            handleSendPrompt();
           }
         }}
       />
@@ -473,6 +480,7 @@ const ChatTextarea: React.FC<ChatTextareaProps> = ({
             hidden
           />
           <Button
+            className="border border-[#656262] "
             variant="outline"
             size="sm"
             onClick={() => imageInputRef.current?.click()}
@@ -487,8 +495,8 @@ const ChatTextarea: React.FC<ChatTextareaProps> = ({
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
-                className="flex items-center gap-1"
-                size={'sm'}
+                className="flex items-center gap-1 border border-[#656262]"
+                size={"sm"}
               >
                 <RectangleVertical className="size-4" />
                 <span className="text-sm">{selectedAspectRatio}</span>
@@ -496,7 +504,7 @@ const ChatTextarea: React.FC<ChatTextareaProps> = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-32">
-              {['auto', '1:1', '4:3', '3:4', '16:9', '9:16'].map((ratio) => (
+              {["Auto", "1:1", "4:3", "3:4", "16:9", "9:16"].map((ratio) => (
                 <DropdownMenuItem
                   key={ratio}
                   onClick={() => setSelectedAspectRatio(ratio)}
@@ -515,9 +523,9 @@ const ChatTextarea: React.FC<ChatTextareaProps> = ({
           <div className="relative" ref={quantitySliderRef}>
             <Button
               variant="outline"
-              className="flex items-center gap-1"
+              className="flex items-center gap-1 border border-[#656262]"
               onClick={() => setShowQuantitySlider(!showQuantitySlider)}
-              size={'sm'}
+              size={"sm"}
             >
               <Hash className="size-4" />
               <span className="text-sm">{quantity}</span>
@@ -528,16 +536,16 @@ const ChatTextarea: React.FC<ChatTextareaProps> = ({
             <AnimatePresence>
               {showQuantitySlider && (
                 <motion.div
-                  className="absolute bottom-full mb-2 left-0  bg-background border border-border rounded-lg p-4 shadow-lg min-w-48"
+                  className="absolute bottom-full mb-2 left-0  bg-background border border-border bg-[#353535] rounded-lg p-4 shadow-lg min-w-48"
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  transition={{ duration: 0.15, ease: 'easeOut' }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
                 >
                   <div className="flex flex-col gap-3">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium">
-                        {t('chat:textarea.quantity', 'Image Quantity')}
+                        {t("chat:textarea.quantity", "Image Quantity")}
                       </span>
                       <span className="text-sm text-muted-foreground">
                         {quantity}
@@ -584,7 +592,7 @@ const ChatTextarea: React.FC<ChatTextareaProps> = ({
           </Button>
         ) : (
           <Button
-            className="shrink-0"
+            className="shrink-0 rounded-xl bg-[#3F3F3F] hover:bg-muted/70 text-foreground/90 transition"
             variant="default"
             size="icon"
             onClick={handleSendPrompt}
@@ -595,7 +603,7 @@ const ChatTextarea: React.FC<ChatTextareaProps> = ({
         )}
       </div>
     </motion.div>
-  )
-}
+  );
+};
 
-export default ChatTextarea
+export default ChatTextarea;

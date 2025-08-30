@@ -11,6 +11,10 @@ import CanvasList from "@/components/home/CanvasList";
 import { nanoid } from "nanoid";
 import TopMenu from "@/components/TopMenu";
 import { DEFAULT_SYSTEM_PROMPT } from "@/constants";
+import SideBar from "@/HomePage/PageOne/SideBar";
+import TopBar from "./TopBar";
+import { ImageAILayout } from "@/ChatUI/ImgToolLayout";
+import AvailableTemplatesGallery from "./AvailableTemplatesGallery";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -19,15 +23,18 @@ const Home = () => {
 
   const { mutate: createCanvasMutation, isPending } = useMutation({
     mutationFn: createCanvas,
-    onSuccess: (data: { id: string }, variables: {
-      name: string;
-      canvas_id: string;
-      messages: any[];
-      session_id: string;
-      text_model: any;
-      tool_list: any[];
-      system_prompt: string;
-    }) => {
+    onSuccess: (
+      data: { id: string },
+      variables: {
+        name: string;
+        canvas_id: string;
+        messages: any[];
+        session_id: string;
+        text_model: any;
+        tool_list: any[];
+        system_prompt: string;
+      }
+    ) => {
       setInitCanvas(true);
       navigate(`/canvas/${data.id}?sessionId=${variables.session_id}`);
     },
@@ -39,56 +46,68 @@ const Home = () => {
   });
 
   return (
-    <div className="flex flex-col h-screen">
-      <ScrollArea className="h-full">
-        <TopMenu />
+    <div className="flex h-screen bg-background">
+      <SideBar />
 
-        <div className="relative flex flex-col items-center justify-center h-fit min-h-[calc(100vh-460px)] pt-[60px] select-none">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h1 className="text-5xl font-bold mb-2 mt-8 text-center">
-              {t("home:title")}
-            </h1>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <p className="text-xl text-gray-500 mb-8 text-center">
-              {t("home:subtitle")}
-            </p>
-          </motion.div>
+      <div className="flex flex-1 flex-col ml-16">
+        <TopBar />
 
-          <ChatTextarea
-            className="w-full max-w-xl"
-            messages={[]}
-            onSendMessages={(messages, configs) => {
-              createCanvasMutation({
-                name: t("home:newCanvas"),
-                canvas_id: nanoid(),
-                messages: messages,
-                session_id: nanoid(),
-                text_model: {
-                  provider: configs.textModel?.provider || '',
-                  model: configs.textModel?.model || '',
-                  url: configs.textModel?.url || '',
-                },
-                tool_list: configs.toolList || [],
-                system_prompt:
-                  localStorage.getItem("system_prompt") ||
-                  DEFAULT_SYSTEM_PROMPT,
-              });
-            }}
-            pending={isPending}
-          />
-        </div>
+        <ScrollArea className="h-full py-2 px-6 lg:px-10 flex-1">
+          <div className="relative flex flex-col items-center h-fit py-[60px] select-none">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="text-2xl font-semibold mb-4 text-center text-white">
+                {t("home:title")}
+                <span className="bg-gradient-to-r from-fuchsia-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                  sáng tạo
+                </span>
+                <sup className="ml-1 text-base">
+                  <span className="bg-gradient-to-r from-fuchsia-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                    ✨
+                  </span>
+                </sup>{" "}
+                gì hôm nay?
+              </div>
+            </motion.div>
 
-        <CanvasList />
-      </ScrollArea>
+            <div className="w-full max-w-4xl mt-2">
+              <ChatTextarea
+                className="w-full bg-[#2A2A2A] text-white rounded-4xl p-4 border border-[#656262] bg-[#353535]"
+                messages={[]}
+                onSendMessages={(messages, configs) => {
+                  createCanvasMutation({
+                    name: t("home:newCanvas"),
+                    canvas_id: nanoid(),
+                    messages: messages,
+                    session_id: nanoid(),
+                    text_model: {
+                      provider: configs.textModel?.provider || "",
+                      model: configs.textModel?.model || "",
+                      url: configs.textModel?.url || "",
+                    },
+                    tool_list: configs.toolList || [],
+                    system_prompt:
+                      localStorage.getItem("system_prompt") ||
+                      DEFAULT_SYSTEM_PROMPT,
+                  });
+                }}
+                pending={isPending}
+              />
+            </div>
+          </div>
+
+          <div>
+            <CanvasList />
+          </div>
+
+          <div>
+            <AvailableTemplatesGallery />
+          </div>
+        </ScrollArea>
+      </div>
     </div>
   );
 };

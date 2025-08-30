@@ -357,16 +357,16 @@ const ModelSelectorV3: React.FC<ModelSelectorV3Props> = ({
       placement="bottomLeft"
     >
       <Button
-        size="small"
+        
         style={{
           maxWidth: '40%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           overflow: 'hidden',
-          backgroundColor: autoMode ? '#fafafa' : '#f0fdf4',
-          borderColor: autoMode ? '#d9d9d9' : '#bbf7d0',
-          color: autoMode ? '#8c8c8c' : '#16a34a'
+          backgroundColor: autoMode ? '#f0fdf4' : 'transparent',
+          borderColor: autoMode ? '#bbf7d0' : '#656262',
+          color: autoMode ? '#16a34a' : '#8c8c8c'
         }}
         icon={
           autoMode ? (

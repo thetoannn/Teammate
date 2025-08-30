@@ -30,7 +30,7 @@ const NewAi = () => {
         </Link>
 
         <Link
-          to="/chat?tool=media-ai"
+          to="/media-agent"
           className="flex flex-col items-center gap-[5px] w-[calc(50%-1rem)] sm:w-auto group"
         >
           <div className="rounded-full mb-1 w-17 h-10 flex items-center justify-center relative box-border hover:scale-110 transition-all duration-300 ease-in-out cursor-pointer">
