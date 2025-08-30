@@ -1,0 +1,260 @@
+/* Stack Effect Styles */
+.stack-container {
+  position: relative;
+  width: 100%;
+  padding: 20px 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  margin-top: -100px !important;
+}
+
+/* iPad landscape specific fix */
+@media screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  .stack-container {
+    margin-top: 10px !important;
+  }
+}
+
+/* iPad Pro landscape specific fix */
+@media screen and (min-width: 820px) and (max-width: 1180px) and (max-height: 1024px) {
+  .stack-container {
+    margin-top: 10px !important;
+  }
+}
+
+/* Mobile masonry container */
+.mobile-masonry-container {
+  position: relative;
+  width: 100%;
+  padding: 10px;
+  overflow: hidden;
+  margin-top: 0px;
+}
+
+.mobile-masonry-grid {
+  padding: 0 5px;
+}
+
+.stack-line {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  margin-bottom: -138px;
+  height: 400px;
+  width: 100%;
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.stack-line:last-child {
+  margin-bottom: 40px;
+}
+
+.stack-line.stacked {
+  margin-bottom: -80px;
+  height: 350px;
+}
+
+.stack-item {
+  position: relative;
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform-origin: bottom center;
+  margin: 0 -40px;
+  will-change: transform, opacity;
+}
+
+.stack-line.stacked .stack-item.position-0 {
+  z-index: 1;
+  transform: translateY(40px) scale(0.85) rotate(-3deg);
+}
+
+.stack-line.stacked .stack-item.position-1 {
+  z-index: 3;
+  transform: translateY(10px) scale(0.92) rotate(-1deg);
+}
+
+.stack-line.stacked .stack-item.position-2 {
+  z-index: 5;
+  transform: translateY(0px) scale(1) rotate(0deg);
+}
+
+.stack-line.stacked .stack-item.position-3 {
+  z-index: 3;
+  transform: translateY(10px) scale(0.92) rotate(1deg);
+}
+
+.stack-line.stacked .stack-item.position-4 {
+  z-index: 1;
+  transform: translateY(40px) scale(0.85) rotate(3deg);
+}
+
+.stack-line:not(.stacked) .stack-item {
+  margin: 0 4px !important;
+}
+
+.stack-line:not(.stacked) .stack-item.position-0,
+.stack-line:not(.stacked) .stack-item.position-1,
+.stack-line:not(.stacked) .stack-item.position-2,
+.stack-line:not(.stacked) .stack-item.position-3,
+.stack-line:not(.stacked) .stack-item.position-4 {
+  z-index: 1;
+  transform: translateY(0px) scale(1) rotate(0deg);
+}
+
+.masonry-transition {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease-out;
+}
+
+.masonry-transition.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stack-item-content {
+  width: 280px;
+  max-width: 280px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  transition: all 0.3s ease;
+}
+
+.stack-item-content:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 1400px) {
+  .stack-item-content {
+    width: 230px;
+    max-width: 230px;
+  }
+
+  .stack-item {
+    margin: 0 -30px;
+  }
+
+  .stack-line:not(.stacked) .stack-item {
+    margin: 0 5px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .stack-item-content {
+    width: 200px;
+    max-width: 200px;
+  }
+
+  .stack-line {
+    height: 320px;
+    margin-bottom: 60px;
+  }
+
+  .stack-line.stacked {
+    height: 280px;
+    margin-bottom: 40px;
+  }
+
+  .stack-item {
+    margin: 0 -25px;
+  }
+
+  .stack-line:not(.stacked) .stack-item {
+    margin: 0 5px;
+  }
+}
+
+@media (max-width: 768px) {
+  .stack-container {
+    padding: 20px 10px;
+  }
+
+  .stack-item-content {
+    width: 160px;
+    max-width: 160px;
+  }
+
+  .stack-line {
+    height: 280px;
+    margin-bottom: 50px;
+  }
+
+  .stack-line.stacked {
+    height: 240px;
+    margin-bottom: 30px;
+  }
+
+  .stack-item {
+    margin: 0 -20px;
+  }
+
+  .stack-line:not(.stacked) .stack-item {
+    margin: 0 4px;
+  }
+
+  /* Adjust heights for mobile */
+  .stack-line.stacked .stack-item.position-0 {
+    transform: translateY(60px) scale(0.8) rotate(-2deg);
+  }
+
+  .stack-line.stacked .stack-item.position-1 {
+    transform: translateY(30px) scale(0.88) rotate(-1deg);
+  }
+
+  .stack-line.stacked .stack-item.position-2 {
+    transform: translateY(0px) scale(0.95) rotate(0deg);
+  }
+
+  .stack-line.stacked .stack-item.position-3 {
+    transform: translateY(30px) scale(0.88) rotate(1deg);
+  }
+
+  .stack-line.stacked .stack-item.position-4 {
+    transform: translateY(60px) scale(0.8) rotate(2deg);
+  }
+
+  .stack-line:not(.stacked) .stack-item.position-0,
+  .stack-line:not(.stacked) .stack-item.position-1,
+  .stack-line:not(.stacked) .stack-item.position-2,
+  .stack-line:not(.stacked) .stack-item.position-3,
+  .stack-line:not(.stacked) .stack-item.position-4 {
+    /* All components same height on mobile too */
+    transform: translateY(0px) scale(0.9) rotate(0deg);
+  }
+}
+
+/* Animation keyframes */
+@keyframes stackToMasonry {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes masonryToStack {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+}
+
+.stack-to-masonry {
+  animation: stackToMasonry 0.8s ease-out forwards;
+}
+
+.masonry-to-stack {
+  animation: masonryToStack 0.8s ease-out forwards;
+}

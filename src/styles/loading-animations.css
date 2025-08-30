@@ -1,0 +1,56 @@
+/* Loading indicator animations */
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shinyEffect {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.loading-icon {
+  animation: rotate 0s linear infinite;
+}
+
+.loading-text {
+  color: #9ca3af; /* Default gray color */
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent 40%,
+    #ffffff 50%,
+    transparent 60%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shinyEffect 3s ease-in-out infinite;
+  position: relative;
+  display: inline-block;
+}
+
+.loading-text.active {
+  background: linear-gradient(
+    90deg,
+    #9ca3af 0%,
+    #9ca3af 30%,
+    #ffffff 50%,
+    #9ca3af 70%,
+    #9ca3af 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shinyEffect 2.5s ease-in-out infinite;
+}

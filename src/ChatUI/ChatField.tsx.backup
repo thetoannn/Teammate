@@ -1,0 +1,897 @@
+import { useEffect, useRef, useState, useCallback } from "react";
+import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
+import clsx from "clsx";
+import ChatInput from "./ChatInput";
+
+import { AgentImage } from "./AgentChat/components/AgentImage";
+import { AgentMessage } from "./AgentChat/AgentChatTypes";
+import { AgentChatService } from "./AgentChat/AgentChatService";
+import ReactMarkdown from "react-markdown";
+
+import {
+  DynamicCampaignDisplay,
+  CampaignCreationFlow,
+} from "./AgentChat/CampaignTable/CampaignComponents";
+import {
+  isCampaignReportMessage,
+  shouldShowImageToolIndicator,
+  isImageRelatedMessage,
+  isMarketingAssistantPage,
+} from "./utils/imageMessageDetector";
+import {
+  detectProductListMessage,
+  generateProductListResponse,
+} from "./utils/productListMessageDetector";
+import {
+  detectResearchMessage,
+  shouldShowResearchToolIndicator,
+  isResearchAgentPage,
+  shouldFilterVietnameseActivities,
+} from "./utils/researchMessageDetector";
+import ImageToolWrapper from "./components/ImageToolWrapper";
+import { ImageGenTable } from "./AgentChat/imgGenTable";
+import { ProductToolWrapper } from "./AgentChat/ProductListTable";
+import ResearchToolWrapper from "./components/ResearchToolWrapper";
+import AgentTable from "./AgentChat/components/AgentTable";
+import AgentResearchNoMessage from "./components/AgentRearchNoMessage";
+
+const chatService = AgentChatService.getInstance();
+const waitImgEffect = "icon-wait.png";
+
+interface ChatFieldProps {
+  onResearchSplitToggle?: (isOpen: boolean, data?: any) => void;
+  showResearchSplit?: boolean;
+}
+
+export default function ChatField({
+  onResearchSplitToggle,
+  showResearchSplit = false,
+}: ChatFieldProps = {}) {
+  const [messages, setMessages] = useState<AgentMessage[]>([]);
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [hasImagePreviews] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [currentUserMessage, setCurrentUserMessage] = useState<string>("");
+  const [currentAiResponse, setCurrentAiResponse] = useState<string>("");
+  const [lastImageMessage, setLastImageMessage] = useState<string>("");
+  const [lastImageResponse, setLastImageResponse] = useState<string>("");
+  const [lastProductMessage, setLastProductMessage] = useState<string>("");
+  const [lastProductResponse, setLastProductResponse] = useState<string>("");
+  const [lastResearchMessage, setLastResearchMessage] = useState<string>("");
+  const [lastResearchResponse, setLastResearchResponse] = useState<string>("");
+  const sessionId = "default-session";
+
+  const showTimeoutMessage = () => {
+    setIsTyping(false);
+  };
+
+  const filterVietnameseActivityText = (
+    content: string,
+    userMessage: string
+  ): string => {
+    if (!shouldFilterVietnameseActivities(userMessage)) {
+      return content;
+    }
+
+    const vietnamesePatterns = [
+      /🎯[\s\S]*?(?=\n\n|\n[A-Z]|\n[a-z]|$)/gi,
+      /💡[\s\S]*?(?=\n\n|\n[A-Z]|\n[a-z]|$)/gi,
+      /📊[\s\S]*?(?=\n\n|\n[A-Z]|\n[a-z]|$)/gi,
+
+      /Hoạt động liên quan đến nghiên cứu[\s\S]*?(?=\n\n|\n[A-Z]|\n[a-z]|$)/gi,
+      /Dựa trên yêu cầu của bạn[\s\S]*?(?=\n\n|\n[A-Z]|\n[a-z]|$)/gi,
+      /Hiển thị.*hoạt động[\s\S]*?(?=\n\n|\n[A-Z]|\n[a-z]|$)/gi,
+
+      /nghiên cứu[\s\S]*?(?=\n\n|\n[A-Z]|\n[a-z]|$)/gi,
+      /báo cáo[\s\S]*?(?=\n\n|\n[A-Z]|\n[a-z]|$)/gi,
+      /thị trường[\s\S]*?(?=\n\n|\n[A-Z]|\n[a-z]|$)/gi,
+
+      /^\s*🎯.*$/gm,
+      /^\s*💡.*$/gm,
+      /^\s*📊.*$/gm,
+
+      /^.*Hoạt động.*$/gm,
+      /^.*yêu cầu của bạn.*$/gm,
+      /^.*Hiển thị.*hoạt động.*$/gm,
+      /^.*nghiên cứu.*$/gm,
+      /^.*báo cáo.*$/gm,
+      /^.*thị trường.*$/gm,
+
+      /\*\*.*Vietnamese.*\*\*/gi,
+      /\*.*Vietnamese.*\*/gi,
+    ];
+
+    let filteredContent = content;
+    vietnamesePatterns.forEach((pattern) => {
+      filteredContent = filteredContent.replace(pattern, "");
+    });
+
+    filteredContent = filteredContent
+      .replace(/\n{3,}/g, "\n\n")
+      .replace(/^\s*\n/gm, "")
+      .replace(/\s+$/gm, "")
+      .replace(/^\s*$/gm, "")
+      .split("\n")
+      .filter((line) => line.trim() !== "")
+      .join("\n")
+      .trim();
+
+    return filteredContent;
+  };
+
+  const handleSendMessageFromURL = async (message: string) => {
+    if (!message.trim()) return;
+
+    setCurrentUserMessage(message);
+    setCurrentAiResponse("");
+
+    if (isImageRelatedMessage(message)) {
+      setLastImageMessage(message);
+      setLastImageResponse("");
+    }
+
+    if (detectProductListMessage(message)) {
+      setLastProductMessage(message);
+      setLastProductResponse("");
+    }
+
+    if (detectResearchMessage(message)) {
+      setLastResearchMessage(message);
+      setLastResearchResponse("");
+    }
+
+    setIsTyping(true);
+
+    try {
+      const activitiesResponse = await chatService.getAgentActivities(1, 30);
+    } catch (error) {}
+
+    try {
+      const response = await chatService.runSuperAgent(sessionId, message);
+      const reader = response.body?.getReader();
+      let aiContent = "";
+
+      if (reader) {
+        const decoder = new TextDecoder();
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) {
+            break;
+          }
+          const chunk = decoder.decode(value);
+
+          const lines = chunk.split("\n").filter(Boolean);
+          for (const line of lines) {
+            try {
+              const json = JSON.parse(line);
+              if (json.message) {
+                aiContent += json.message + "\n";
+              }
+            } catch {}
+          }
+
+          const filteredAiContent = filterVietnameseActivityText(
+            aiContent,
+            message
+          );
+          setCurrentAiResponse(filteredAiContent);
+
+          if (isImageRelatedMessage(message)) {
+            setLastImageResponse(filteredAiContent);
+          }
+
+          if (detectProductListMessage(message)) {
+            setLastProductResponse(filteredAiContent);
+          }
+
+          if (detectResearchMessage(message)) {
+            setLastResearchResponse(filteredAiContent);
+          }
+
+          if (
+            detectResearchMessage(message) &&
+            isResearchAgentPage(location.pathname, location.search)
+          ) {
+            setMessages((prev) => prev.filter((m) => m.id !== "ai-temp"));
+          } else if (filteredAiContent.trim()) {
+            setMessages((prev) => [
+              ...prev.filter((m) => m.id !== "ai-temp"),
+              {
+                id: "ai-temp",
+                content: filteredAiContent,
+                type: "text",
+                timestamp: new Date(),
+                sender: "ai",
+              },
+            ]);
+          } else {
+            setMessages((prev) => prev.filter((m) => m.id !== "ai-temp"));
+          }
+        }
+
+        const finalFilteredContent = filterVietnameseActivityText(
+          aiContent.trim() || "No response from AI",
+          message
+        );
+        setCurrentAiResponse(finalFilteredContent);
+
+        if (isImageRelatedMessage(message)) {
+          setLastImageResponse(finalFilteredContent);
+        }
+
+        if (detectProductListMessage(message)) {
+          setLastProductResponse(finalFilteredContent);
+        }
+
+        if (detectResearchMessage(message)) {
+          setLastResearchResponse(finalFilteredContent);
+        }
+
+        if (
+          !(
+            detectResearchMessage(message) &&
+            isResearchAgentPage(location.pathname, location.search)
+          )
+        ) {
+          setMessages((prev) => [
+            ...prev.filter((m) => m.id !== "ai-temp"),
+            {
+              id: `ai-${Date.now()}-${Math.random()}`,
+              content: finalFilteredContent,
+              type: "text",
+              timestamp: new Date(),
+              sender: "ai",
+            },
+          ]);
+        }
+      }
+    } catch (error: any) {
+      const errorContent = "AI error: " + (error?.message || "Unknown error");
+      setCurrentAiResponse(errorContent);
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `ai-${Date.now()}`,
+          content: errorContent,
+          type: "text",
+          timestamp: new Date(),
+          sender: "ai",
+        },
+      ]);
+    } finally {
+      setTimeout(() => {
+        setIsTyping(false);
+      }, 3000);
+
+      if (!isImageRelatedMessage(message)) {
+        setCurrentUserMessage("");
+        setCurrentAiResponse("");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const stored = localStorage.getItem("chat-messages");
+    let parsed: AgentMessage[] = stored ? JSON.parse(stored) : [];
+
+    parsed = parsed.map((msg) => ({
+      ...msg,
+      timestamp: new Date(msg.timestamp),
+    }));
+
+    setMessages(parsed);
+
+    const messageFromURL = searchParams.get("message");
+    const decoded = messageFromURL
+      ? decodeURIComponent(messageFromURL.trim())
+      : null;
+
+    if (decoded && decoded !== "") {
+      const alreadyExists = parsed.some((m) => m.content === decoded);
+
+      if (!alreadyExists) {
+        const newMessage: AgentMessage = {
+          id: `user-${Date.now()}`,
+          content: decoded,
+          type: "text",
+          timestamp: new Date(),
+          sender: "user",
+        };
+
+        setMessages((prev) => {
+          const updated = [...prev, newMessage];
+          localStorage.setItem("chat-messages", JSON.stringify(updated));
+          return updated;
+        });
+
+        const currentAgent = searchParams.get("agent");
+        const currentTool = searchParams.get("tool");
+
+        let targetUrl = "";
+        if (currentAgent) {
+          targetUrl = `/chat?agent=${currentAgent}`;
+        } else if (currentTool) {
+          targetUrl = `/chat?tool=${currentTool}`;
+        } else {
+          targetUrl = `/chat?agent=marketing-assistant`;
+        }
+
+        navigate(targetUrl, { replace: true });
+
+        setTimeout(() => {
+          handleSendMessageFromURL(decoded);
+        }, 500);
+      }
+    }
+  }, [searchParams]);
+
+  const handleSendMessage = async (message: string, images?: File[]) => {
+    if (!message.trim() && (!images || images.length === 0)) return;
+
+    setCurrentUserMessage(message);
+    setCurrentAiResponse("");
+
+    if (isImageRelatedMessage(message)) {
+      setLastImageMessage(message);
+      setLastImageResponse("");
+    }
+
+    if (detectProductListMessage(message)) {
+      setLastProductMessage(message);
+      setLastProductResponse("");
+    }
+
+    if (detectResearchMessage(message)) {
+      setLastResearchMessage(message);
+      setLastResearchResponse("");
+    }
+
+    const userMessage: AgentMessage = {
+      id: `user-${Date.now()}`,
+      content: message,
+      type: "text",
+      timestamp: new Date(),
+      sender: "user",
+    };
+
+    if (images && images.length > 0) {
+      const base64Images = await Promise.all(images.map(fileToBase64));
+      userMessage.metadata = {
+        ...userMessage.metadata,
+        imageUrls: base64Images,
+      };
+    }
+
+    setMessages((prev) => {
+      const updatedMessages = [...prev, userMessage];
+      localStorage.setItem("chat-messages", JSON.stringify(updatedMessages));
+      return updatedMessages;
+    });
+
+    setIsTyping(true);
+
+    try {
+      const activitiesResponse = await chatService.getAgentActivities(1, 30);
+    } catch (error) {}
+
+    try {
+      const response = await chatService.runSuperAgent(sessionId, message);
+      const reader = response.body?.getReader();
+      let aiContent = "";
+
+      if (reader) {
+        const decoder = new TextDecoder();
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) {
+            break;
+          }
+          const chunk = decoder.decode(value);
+
+          const lines = chunk.split("\n").filter(Boolean);
+          for (const line of lines) {
+            try {
+              const json = JSON.parse(line);
+              if (json.message) {
+                aiContent += json.message + "\n";
+              }
+            } catch {}
+          }
+
+          const filteredAiContent = filterVietnameseActivityText(
+            aiContent,
+            message
+          );
+          setCurrentAiResponse(filteredAiContent);
+
+          if (isImageRelatedMessage(message)) {
+            setLastImageResponse(filteredAiContent);
+          }
+
+          if (detectProductListMessage(message)) {
+            setLastProductResponse(filteredAiContent);
+          }
+
+          if (detectResearchMessage(message)) {
+            setLastResearchResponse(filteredAiContent);
+          }
+
+          if (
+            detectResearchMessage(message) &&
+            isResearchAgentPage(location.pathname, location.search)
+          ) {
+            setMessages((prev) => prev.filter((m) => m.id !== "ai-temp"));
+          } else if (filteredAiContent.trim()) {
+            setMessages((prev) => [
+              ...prev.filter((m) => m.id !== "ai-temp"),
+              {
+                id: "ai-temp",
+                content: filteredAiContent,
+                type: "text",
+                timestamp: new Date(),
+                sender: "ai",
+              },
+            ]);
+          } else {
+            setMessages((prev) => prev.filter((m) => m.id !== "ai-temp"));
+          }
+        }
+
+        const finalAiContent = filterVietnameseActivityText(
+          aiContent.trim() || "No response from AI",
+          message
+        );
+        setCurrentAiResponse(finalAiContent);
+
+        if (isImageRelatedMessage(message)) {
+          setLastImageResponse(finalAiContent);
+        }
+
+        if (detectProductListMessage(message)) {
+          setLastProductResponse(finalAiContent);
+        }
+
+        if (detectResearchMessage(message)) {
+          setLastResearchResponse(finalAiContent);
+        }
+
+        if (
+          !(
+            detectResearchMessage(message) &&
+            isResearchAgentPage(location.pathname, location.search)
+          )
+        ) {
+          setMessages((prev) => [
+            ...prev.filter((m) => m.id !== "ai-temp"),
+            {
+              id: `ai-${Date.now()}-${Math.random()}`,
+              content: finalAiContent,
+              type: "text",
+              timestamp: new Date(),
+              sender: "ai",
+            },
+          ]);
+        }
+      }
+    } catch (error: any) {
+      const errorContent = "AI error: " + (error?.message || "Unknown error");
+      setCurrentAiResponse(errorContent);
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `ai-${Date.now()}`,
+          content: errorContent,
+          type: "text",
+          timestamp: new Date(),
+          sender: "ai",
+        },
+      ]);
+    } finally {
+      setTimeout(() => {
+        setIsTyping(false);
+      }, 3000);
+
+      if (!isImageRelatedMessage(message)) {
+        setCurrentUserMessage("");
+        setCurrentAiResponse("");
+      }
+    }
+  };
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const renderImageGroups = (images: string[]) => {
+    const containerWidth = 660;
+    const minImageWidth = 200;
+    const gap = 8;
+
+    const imagesPerRow = Math.floor(containerWidth / (minImageWidth + gap));
+    const rowCount = Math.ceil(images.length / imagesPerRow);
+
+    const groups = [];
+    for (let i = 0; i < rowCount; i++) {
+      groups.push(images.slice(i * imagesPerRow, (i + 1) * imagesPerRow));
+    }
+
+    return groups.map((group, groupIndex) => (
+      <div key={groupIndex} className="flex gap-2 mb-2">
+        {group.map((image, index) => (
+          <div
+            key={index}
+            className="flex-1 min-w-[120px] max-w-[calc(33.333%-8px)] bg-transparent"
+          >
+            <img
+              src={image}
+              alt={`uploaded-${groupIndex * imagesPerRow + index}`}
+              className="w-full h-auto max-h-[120px] object-cover rounded-lg bg-transparent"
+            />
+          </div>
+        ))}
+      </div>
+    ));
+  };
+
+  const shouldSkipAIMessageForResearch = (userMessage: string): boolean => {
+    if (!userMessage) return false;
+
+    const isResearchMessage = detectResearchMessage(userMessage);
+    const isResearchPage = isResearchAgentPage(
+      location.pathname,
+      location.search
+    );
+
+    return isResearchMessage && isResearchPage;
+  };
+
+  const renderMessageContent = (
+    message: AgentMessage,
+    messageIndex: number
+  ) => {
+    const { content, metadata, type, sender } = message;
+
+    if (sender === "user") {
+      return (
+        <div className="flex flex-col gap-2 max-w-[700px] m-auto">
+          {metadata?.imageUrls && metadata.imageUrls.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {metadata.imageUrls.map((imageUrl: string, index: number) => (
+                <div key={index} className="relative w-[120px] h-[90px]">
+                  <img
+                    src={imageUrl}
+                    alt={`User uploaded image ${index + 1}`}
+                    className="w-full h-full rounded-lg object-cover border border-gray-600"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {content && (
+            <div className="bg-[#343434] text-white text-[13px] leading-[1.6] tracking-[0.2px] font-sans font-regular px-4 py-2 rounded-xl rounded-br-none overflow-hidden whitespace-pre-line">
+              {content}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    if (sender === "ai" && content) {
+      const lowerContent = content.toLowerCase();
+
+      if (detectProductListMessage(content)) {
+        return null;
+      }
+
+      if (isImageRelatedMessage(content)) {
+        return null;
+      }
+
+      const userMessages = messages.filter((m) => m.sender === "user");
+      const lastUserMessage = userMessages[userMessages.length - 1];
+
+      if (
+        lastUserMessage &&
+        shouldSkipAIMessageForResearch(lastUserMessage.content)
+      ) {
+        return <div></div>;
+      }
+
+      if (
+        (lowerContent.includes("tạo chiến dịch") &&
+          lowerContent.includes("quảng cáo")) ||
+        lowerContent.includes("chiến dịch quảng cáo mới") ||
+        lowerContent.includes("campaign creation") ||
+        (lowerContent.includes("tăng tin nhắn") &&
+          lowerContent.includes("messenger")) ||
+        (lowerContent.includes("chiến dịch") &&
+          (lowerContent.includes("facebook") ||
+            lowerContent.includes("ads") ||
+            lowerContent.includes("quảng cáo")))
+      ) {
+        return <CampaignCreationFlow userQuery={content} />;
+      }
+
+      if (isCampaignReportMessage(content)) {
+        return <DynamicCampaignDisplay userQuery={content} />;
+      }
+    }
+
+    const defaultColumns = [
+      {
+        title: "Name",
+        dataIndex: "name",
+        key: "name",
+        ellipsis: true,
+      },
+      {
+        title: "Value",
+        dataIndex: "value",
+        key: "value",
+        ellipsis: true,
+      },
+      {
+        title: "Description",
+        dataIndex: "description",
+        key: "description",
+        ellipsis: true,
+      },
+    ];
+
+    if (type === "table" || metadata?.tableData) {
+      const tableData = metadata?.tableData || [];
+      const columns =
+        metadata?.columns ||
+        (tableData.length > 0
+          ? Object.keys(tableData[0] || {}).map((key) => ({
+              title: key.charAt(0).toUpperCase() + key.slice(1),
+              dataIndex: key,
+              key: key,
+              ellipsis: true,
+            }))
+          : defaultColumns);
+
+      return (
+        <>
+          {content && (
+            <div className="text-[#1f1f1f] text-[13px] leading-[1.6] tracking-[0.2px] font-sans font-regular   py-2 rounded-2xl rounded-tl-none dark:text-white overflow-hidden">
+              <ReactMarkdown>{content}</ReactMarkdown>
+            </div>
+          )}
+          <AgentTable data={tableData} columns={columns} />
+        </>
+      );
+    }
+
+    if (type === "image" || metadata?.imageUrl || metadata?.imageUrls) {
+      const imageUrls = metadata?.imageUrls || [metadata?.imageUrl];
+      return (
+        <>
+          {content && (
+            <div className="text-[#1f1f1f] text-[13px] leading-[1.6] tracking-[0.2px] font-sans font-regular py-2 rounded-2xl rounded-tl-none dark:text-white overflow-hidden">
+              <ReactMarkdown>{content}</ReactMarkdown>
+            </div>
+          )}
+          {renderImageGroups(imageUrls)}
+        </>
+      );
+    }
+
+    if (type === "mixed") {
+      const tableData = metadata?.tableData || [];
+      const columns =
+        metadata?.columns ||
+        (tableData.length > 0
+          ? Object.keys(tableData[0] || {}).map((key) => ({
+              title: key.charAt(0).toUpperCase() + key.slice(1),
+              dataIndex: key,
+              key: key,
+              ellipsis: true,
+            }))
+          : defaultColumns);
+
+      return (
+        <>
+          {content && (
+            <div className="text-[#1f1f1f] text-[13px] leading-[1.6] tracking-[0.2px] font-sans font-regular py-2 rounded-2xl rounded-tl-none dark:text-white overflow-hidden">
+              <ReactMarkdown>{content}</ReactMarkdown>
+            </div>
+          )}
+          {metadata?.tableData && (
+            <AgentTable data={metadata.tableData || []} columns={columns} />
+          )}
+          {metadata?.imageUrls && renderImageGroups(metadata.imageUrls)}
+          {metadata?.imageUrl && !metadata?.imageUrls && (
+            <img
+              src={metadata.imageUrl}
+              alt={metadata.imageAlt || "AI Generated Image"}
+              className="w-full h-auto max-h-[200px] object-cover rounded-lg"
+            />
+          )}
+        </>
+      );
+    }
+
+    return (
+      <div className="text-[#1f1f1f] text-[13px] leading-[1.6] tracking-[0.2px] font-sans font-regular py-2 rounded-2xl rounded-tl-none dark:text-white overflow-hidden">
+        <ReactMarkdown>{content}</ReactMarkdown>
+      </div>
+    );
+  };
+
+  return (
+    <div
+      className="flex flex-col text-white"
+      style={{ height: showResearchSplit ? "100%" : "80vh" }}
+    >
+      <div
+        className={`flex-1 overflow-y-auto ${
+          showResearchSplit
+            ? "chat-field-split-scrollbar"
+            : "chat-field-main-scrollbar"
+        }`}
+        style={{
+          backgroundColor: "transparent",
+          height: showResearchSplit
+            ? "calc(100% - 108px)"
+            : "calc(80vh - 200px)",
+          paddingTop: showResearchSplit ? "0px" : "80px",
+          paddingBottom: showResearchSplit ? "40px" : "80px",
+          marginTop: showResearchSplit ? "80px" : "0px",
+        }}
+      >
+        <div
+          className={`${
+            showResearchSplit ? "max-w-full px-4" : "max-w-[750px] m-auto"
+          } mx-auto`}
+        >
+          <div
+            className={`${
+              showResearchSplit ? "" : "px-0 sm:px-[8px] sm:pr-[48px]"
+            }`}
+          >
+            {messages.length === 0 ? (
+              <div className="text-center text-white">
+                <div className="py-15 text-xl font-bold mb-[-30px]">
+                  Xin chào, tôi có thể giúp gì cho bạn?
+                </div>
+                <AgentResearchNoMessage onSendMessage={handleSendMessage} />
+              </div>
+            ) : (
+              messages.map((msg, index) => (
+                <div
+                  key={msg.id}
+                  className={`${
+                    index === messages.length - 1 ? "mb-2" : "mb-4"
+                  }`}
+                >
+                  <div
+                    className={clsx(
+                      "flex gap-2 items-start",
+                      msg.sender === "user" ? "justify-end" : "justify-start"
+                    )}
+                  >
+                    <div
+                      className={clsx(
+                        "flex flex-col gap-1 max-w-[85%] sm:max-w-[700px]",
+                        msg.sender === "user" ? "items-end" : "items-start"
+                      )}
+                    >
+                      {renderMessageContent(msg, index)}
+                      {msg.sender === "user" && (
+                        <div
+                          className={clsx(
+                            "message-timestamp text-xs text-gray-500 mt-1",
+                            "text-right"
+                          )}
+                        >
+                          {msg.timestamp.toLocaleTimeString()}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {msg.sender === "user" &&
+                    isImageRelatedMessage(msg.content) &&
+                    isMarketingAssistantPage(
+                      location.pathname,
+                      location.search
+                    ) && (
+                      <div className="w-full mt-3 mb-2">
+                        <ImageToolWrapper
+                          aiResponse={lastImageResponse}
+                          isVisible={true}
+                          isLoading={isTyping}
+                        />
+                      </div>
+                    )}
+
+                  {msg.sender === "user" &&
+                    detectProductListMessage(msg.content) &&
+                    isMarketingAssistantPage(
+                      location.pathname,
+                      location.search
+                    ) && (
+                      <div className="w-full mt-3 mb-2">
+                        <ProductToolWrapper
+                          aiResponse={lastProductResponse}
+                          isVisible={true}
+                          isLoading={isTyping}
+                        />
+                      </div>
+                    )}
+
+                  {msg.sender === "user" &&
+                    detectResearchMessage(msg.content) &&
+                    isResearchAgentPage(location.pathname, location.search) && (
+                      <div className="w-full mt-3 mb-2">
+                        <ResearchToolWrapper
+                          userQuery={msg.content}
+                          aiResponse={lastResearchResponse}
+                          isLoading={isTyping}
+                          onSplitScreenToggle={onResearchSplitToggle}
+                        />
+                      </div>
+                    )}
+                </div>
+              ))
+            )}
+            {isTyping && (
+              <div className="agent-typing-indicator flex items-center gap-2 mb-4">
+                <img
+                  className="w-5 h-5 loading-icon"
+                  src={waitImgEffect}
+                  alt="Loading..."
+                />
+                <div className="loading-text text-sm italic">Đang xử lý...</div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+        </div>
+      </div>
+
+      <div
+        className="flex-shrink-0 relative z-50"
+        style={{
+          height: showResearchSplit ? "108px" : "120px",
+          minHeight: showResearchSplit ? "108px" : "120px",
+          backgroundColor: "transparent",
+          position: showResearchSplit ? "relative" : "fixed",
+          bottom: showResearchSplit ? "auto" : "0",
+
+          left: showResearchSplit ? "auto" : "0",
+          right: showResearchSplit ? "auto" : "0",
+        }}
+      >
+        <div
+          className={`${
+            showResearchSplit ? "max-w-full px-4" : "max-w-[730px] m-auto"
+          } mx-auto h-full flex items-center relative z-50`}
+          style={{ backgroundColor: "transparent" }}
+        >
+          <ChatInput
+            onSendMessage={handleSendMessage}
+            isLoading={isTyping}
+            showResearchSplit={showResearchSplit}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}

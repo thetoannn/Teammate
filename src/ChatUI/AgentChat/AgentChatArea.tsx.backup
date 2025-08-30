@@ -1,0 +1,194 @@
+import React, { useState } from "react";
+
+import { AgentChatInput } from "./AgentChatInput";
+import { AgentChatService } from "./AgentChatService";
+import { AgentMessage as AgentMessageType } from "./AgentChatTypes";
+import AgentMessage from "./components/AgentMessage";
+
+interface AgentChatAreaProps {
+  agentId?: string;
+  sessionId?: string;
+}
+
+export const AgentChatArea: React.FC<AgentChatAreaProps> = ({
+  agentId,
+  sessionId = "default-session",
+}) => {
+  const [messages, setMessages] = useState<AgentMessageType[]>([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+  const [currentAgent, setCurrentAgent] = useState<string | null>(null);
+  const chatService = AgentChatService.getInstance();
+
+  const handleSendMessage = async (message: string) => {
+    if (!message.trim()) return;
+
+    const userMessage: AgentMessageType = {
+      id: `user-${Date.now()}`,
+      content: message,
+      type: "text",
+      timestamp: new Date(),
+      sender: "user",
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setIsTyping(true);
+    setCurrentAgent("AI");
+
+    // Create initial AI message that will be updated with streaming content
+    const initialAiMessage: AgentMessageType = {
+      id: `ai-${Date.now()}`,
+      content: "",
+      type: "text",
+      timestamp: new Date(),
+      sender: "ai",
+      metadata: { agentName: "AI" },
+    };
+
+    setMessages((prev) => [...prev, initialAiMessage]);
+
+    try {
+      console.log("🔄 About to call runSuperAgent with:", {
+        sessionId,
+        message,
+      });
+
+      const response = await chatService.runSuperAgent(sessionId, message);
+
+      console.log("✅ runSuperAgent completed, response received:", {
+        ok: response.ok,
+        status: response.status,
+        hasBody: !!response.body,
+        contentType: response.headers.get("content-type"),
+      });
+
+      console.log("🔄 About to call processStreamingResponse...");
+
+      const result = await chatService.processStreamingResponse(
+        response,
+        // onChunk callback - update the message content as chunks arrive
+        (chunk: string) => {
+          console.log("📊 Received chunk in UI:", chunk);
+          setMessages((prev) => {
+            return prev.map((msg) => {
+              if (msg.id === initialAiMessage.id) {
+                return {
+                  ...msg,
+                  content: (msg.content || "") + chunk,
+                };
+              }
+              return msg;
+            });
+          });
+        },
+        // onComplete callback - finalize the response
+        (fullResponse: string) => {
+          console.log("✅ Stream completed with full response:", fullResponse);
+          setIsTyping(false);
+          setCurrentAgent(null);
+
+          // If no content was received, show a fallback message
+          if (!fullResponse || fullResponse.trim() === "") {
+            console.warn(
+              "⚠️ Empty response received, showing fallback message"
+            );
+            setMessages((prev) => {
+              return prev.map((msg) => {
+                if (msg.id === initialAiMessage.id) {
+                  return {
+                    ...msg,
+                    content:
+                      "Xin lỗi, tôi không thể tạo phản hồi cho yêu cầu này. Vui lòng thử lại sau.",
+                  };
+                }
+                return msg;
+              });
+            });
+          }
+        },
+        // onError callback - handle errors
+        (error: Error) => {
+          console.error("❌ Stream error:", error);
+          setIsTyping(false);
+          setCurrentAgent(null);
+
+          setMessages((prev) => {
+            return prev.map((msg) => {
+              if (msg.id === initialAiMessage.id) {
+                return {
+                  ...msg,
+                  content:
+                    "Đã xảy ra lỗi khi xử lý yêu cầu. Vui lòng thử lại sau.",
+                };
+              }
+              return msg;
+            });
+          });
+        }
+      );
+
+      console.log("✅ processStreamingResponse completed with result:", result);
+    } catch (error) {
+      console.error("❌ Error in handleSendMessage:", error);
+      console.error(
+        "❌ Error stack:",
+        error instanceof Error ? error.stack : "No stack trace"
+      );
+      setIsTyping(false);
+      setCurrentAgent(null);
+
+      // Update the AI message with error content
+      setMessages((prev) => {
+        return prev.map((msg) => {
+          if (msg.id === initialAiMessage.id) {
+            return {
+              ...msg,
+              content: "Hệ thống đang nâng cấp, vui lòng quay lại sau ít phút!",
+            };
+          }
+          return msg;
+        });
+      });
+    }
+  };
+
+  return (
+    <div className="agent-chat-area flex flex-col h-full bg-white dark:bg-st-dark-secondary">
+      <div className="chat-messages flex-1 overflow-y-auto p-4 space-y-4">
+        {messages.map((message) => (
+          <AgentMessage
+            key={message.id}
+            content={message.content}
+            time={message.timestamp.toLocaleTimeString()}
+            sender={message.sender}
+            agentName={message.metadata?.agentName}
+          />
+        ))}
+        {isTyping && (
+          <div className="agent-typing-indicator flex items-center gap-2">
+            <img
+              className="w-5 h-5 loading-icon"
+              src="/icon-wait.png"
+              alt="Loading..."
+            />
+            <div className="loading-text text-sm italic">
+              {currentAgent
+                ? `${currentAgent} đang phản hồi...`
+                : "Đang xử lý..."}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="chat-input-container border-t border-gray-200 dark:border-st-dark-border">
+        <AgentChatInput
+          value={inputValue}
+          onChange={setInputValue}
+          onSend={handleSendMessage}
+          disabled={isTyping}
+          isLoading={isTyping}
+        />
+      </div>
+    </div>
+  );
+};

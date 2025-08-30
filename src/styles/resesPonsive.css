@@ -1,0 +1,747 @@
+.my-masonry-grid {
+  display: flex;
+  width: 100%;
+  margin-left: -8px;
+  margin-right: -8px;
+}
+
+.my-masonry-grid_column {
+  background-clip: padding-box;
+  padding-left: 8px;
+  padding-right: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.my-masonry-grid_column > div {
+  margin-bottom: 16px;
+  display: block;
+  width: 100%;
+  position: relative;
+}
+
+.my-masonry-grid img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+}
+
+.relative.rounded-lg {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.block.w-full.group {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.w-full.h-auto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Mobile-specific masonry grid styles */
+@media (max-width: 1023px) {
+  .mobile-masonry-grid {
+    margin-left: -4px;
+    margin-right: -4px;
+  }
+
+  .mobile-masonry-grid .my-masonry-grid_column {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  .mobile-masonry-grid .my-masonry-grid_column > div {
+    margin-bottom: 8px;
+  }
+
+  /* Subtle brick effect for mobile */
+  .mobile-masonry-grid
+    .my-masonry-grid_column:nth-child(odd)
+    > div:nth-child(even) {
+    transform: translateY(2px);
+  }
+
+  .mobile-masonry-grid
+    .my-masonry-grid_column:nth-child(even)
+    > div:nth-child(odd) {
+    transform: translateY(-2px);
+  }
+}
+
+/* Completely disable ALL masonry brick effects for desktop screens */
+@media (min-width: 1024px) {
+  .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    animation-delay: 0s !important;
+  }
+
+  /* Disable all brick-like transforms completely */
+  .my-masonry-grid_column:nth-child(odd) > div:nth-child(even),
+  .my-masonry-grid_column:nth-child(even) > div:nth-child(odd),
+  .my-masonry-grid_column:nth-child(1) > div:nth-child(2n),
+  .my-masonry-grid_column:nth-child(2) > div:nth-child(2n + 1),
+  .my-masonry-grid_column:nth-child(3) > div:nth-child(2n),
+  .my-masonry-grid_column:nth-child(4) > div:nth-child(2n + 1),
+  .my-masonry-grid_column:nth-child(5) > div:nth-child(2n) {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+  }
+
+  /* Ensure no layout shifts from any source */
+  .my-masonry-grid[data-masonry-active="true"] .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+  }
+}
+
+/* High-resolution screens - Apply stable logic like 1280x800 */
+/* 2400x1600 resolution */
+@media only screen and (width: 2400px) and (height: 1600px) {
+  .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    animation-delay: 0s !important;
+    opacity: 1 !important;
+  }
+}
+
+/* 2400x1200 resolution */
+@media only screen and (width: 2400px) and (height: 1200px) {
+  .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    animation-delay: 0s !important;
+    opacity: 1 !important;
+  }
+}
+
+/* 2560x1600 resolution */
+@media only screen and (width: 2560px) and (height: 1600px) {
+  .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    animation-delay: 0s !important;
+    opacity: 1 !important;
+  }
+}
+
+/* 2880x1800 resolution */
+@media only screen and (width: 2880px) and (height: 1800px) {
+  .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    animation-delay: 0s !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Range-based media queries for similar high-resolution screens */
+@media only screen and (min-width: 2400px) and (max-width: 2880px) and (min-height: 1200px) and (max-height: 1800px) {
+  .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    animation-delay: 0s !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Specific fixes for problematic screen resolutions - Apply 1280x800 logic */
+/* 1366x1024 Resolution */
+@media screen and (width: 1366px) and (height: 1024px) {
+  .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    animation-delay: 0s !important;
+    opacity: 1 !important;
+  }
+
+  .my-masonry-grid[data-masonry-active="true"] .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+  }
+
+  /* Disable all masonry animations and effects */
+  .masonry-card {
+    animation: none !important;
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out !important;
+  }
+}
+
+/* 1600x1080 Resolution */
+@media screen and (width: 1600px) and (height: 1080px) {
+  .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    animation-delay: 0s !important;
+    opacity: 1 !important;
+  }
+
+  .my-masonry-grid[data-masonry-active="true"] .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+  }
+
+  .masonry-card {
+    animation: none !important;
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out !important;
+  }
+}
+
+/* 1080x1600 Resolution (Portrait) */
+@media screen and (width: 1080px) and (height: 1600px) {
+  .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    animation-delay: 0s !important;
+    opacity: 1 !important;
+  }
+
+  .my-masonry-grid[data-masonry-active="true"] .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+  }
+
+  .masonry-card {
+    animation: none !important;
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out !important;
+  }
+}
+
+/* 1900x1080 Resolution */
+@media screen and (width: 1900px) and (height: 1080px) {
+  .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    animation-delay: 0s !important;
+    opacity: 1 !important;
+  }
+
+  .my-masonry-grid[data-masonry-active="true"] .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+  }
+
+  .masonry-card {
+    animation: none !important;
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out !important;
+  }
+}
+
+/* 1080x1900 Resolution (Portrait) */
+@media screen and (width: 1080px) and (height: 1900px) {
+  .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    animation-delay: 0s !important;
+    opacity: 1 !important;
+  }
+
+  .my-masonry-grid[data-masonry-active="true"] .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+  }
+
+  .masonry-card {
+    animation: none !important;
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out !important;
+  }
+}
+
+/* Additional range-based media queries for similar resolutions */
+@media screen and (min-width: 1366px) and (max-width: 1366px) and (min-height: 1024px) and (max-height: 1024px) {
+  .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    animation-delay: 0s !important;
+    opacity: 1 !important;
+  }
+}
+
+@media screen and (min-width: 1600px) and (max-width: 1600px) and (min-height: 1080px) and (max-height: 1080px) {
+  .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    animation-delay: 0s !important;
+    opacity: 1 !important;
+  }
+}
+
+@media screen and (min-width: 1900px) and (max-width: 1900px) and (min-height: 1080px) and (max-height: 1080px) {
+  .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    animation-delay: 0s !important;
+    opacity: 1 !important;
+  }
+}
+
+/* iPhone SE (320-375px) */
+@media only screen and (max-width: 375px) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 5px !important;
+    line-clamp: 1 !important;
+    -webkit-line-clamp: 1 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 5px !important;
+    padding-top: 1.5px !important;
+    padding-bottom: 1.5px !important;
+  }
+}
+/* i SE */
+@media only screen and (min-width: 375px) and (max-width: 667px) and (orientation: portrait) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 7px !important;
+    line-clamp: 2 !important;
+    -webkit-line-clamp: 2 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 5px !important;
+    padding-top: 1.5px !important;
+    padding-bottom: 1.5px !important;
+  }
+}
+
+@media only screen and (max-height: 380px) and (orientation: landscape) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 6px !important;
+    line-clamp: 2 !important;
+    -webkit-line-clamp: 2 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 5px !important;
+    padding-top: 1.5px !important;
+    padding-bottom: 1.5px !important;
+  }
+}
+
+/*  XR */
+@media only screen and (min-width: 414px) and (max-width: 896px) and (orientation: portrait) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 5px !important;
+    line-clamp: 1 !important;
+    -webkit-line-clamp: 1 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 4px !important;
+    padding-top: 1px !important;
+    padding-bottom: 1px !important;
+  }
+}
+
+@media only screen and (max-height: 420px) and (orientation: landscape) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 6px !important;
+    line-clamp: 2 !important;
+    -webkit-line-clamp: 2 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 5px !important;
+    padding-top: 1.5px !important;
+    padding-bottom: 1.5px !important;
+  }
+}
+/* 12 */
+@media only screen and (min-width: 390px) and (max-width: 844px) and (orientation: portrait) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 5px !important;
+    line-clamp: 1 !important;
+    -webkit-line-clamp: 1 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 4px !important;
+    padding-top: 1px !important;
+    padding-bottom: 1px !important;
+  }
+}
+
+@media only screen and (max-height: 395px) and (orientation: landscape) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 6px !important;
+    line-clamp: 2 !important;
+    -webkit-line-clamp: 2 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 5px !important;
+    padding-top: 1.5px !important;
+    padding-bottom: 1.5px !important;
+  }
+}
+/* Promas */
+@media only screen and (min-width: 430px) and (max-width: 932px) and (orientation: portrait) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 5px !important;
+    line-clamp: 1 !important;
+    -webkit-line-clamp: 1 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 4px !important;
+    padding-top: 1px !important;
+    padding-bottom: 1px !important;
+  }
+}
+
+@media only screen and (max-height: 435px) and (orientation: landscape) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 6px !important;
+    line-clamp: 2 !important;
+    -webkit-line-clamp: 2 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 5px !important;
+    padding-top: 1.5px !important;
+    padding-bottom: 1.5px !important;
+  }
+}
+/* Pixel 7 */
+@media only screen and (min-width: 412px) and (max-width: 915px) and (orientation: portrait) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 5px !important;
+    line-clamp: 1 !important;
+    -webkit-line-clamp: 1 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 4px !important;
+    padding-top: 1px !important;
+    padding-bottom: 1px !important;
+  }
+}
+
+@media only screen and (max-height: 417px) and (orientation: landscape) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 6px !important;
+    line-clamp: 2 !important;
+    -webkit-line-clamp: 2 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 5px !important;
+    padding-top: 1.5px !important;
+    padding-bottom: 1.5px !important;
+  }
+}
+/* S8*/
+@media only screen and (min-width: 360px) and (max-width: 740px) and (orientation: portrait) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 5px !important;
+    line-clamp: 1 !important;
+    -webkit-line-clamp: 1 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 4px !important;
+    padding-top: 1px !important;
+    padding-bottom: 1px !important;
+  }
+}
+
+@media only screen and (max-height: 417px) and (orientation: landscape) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 6px !important;
+    line-clamp: 2 !important;
+    -webkit-line-clamp: 2 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 5px !important;
+    padding-top: 1.5px !important;
+    padding-bottom: 1.5px !important;
+  }
+}
+/* Ultra  */
+@media only screen and (min-width: 412px) and (max-width: 915px) and (orientation: portrait) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 4.3px !important;
+    line-clamp: 1 !important;
+    -webkit-line-clamp: 1 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 3.1px !important;
+    padding-top: 1px !important;
+    padding-bottom: 1px !important;
+  }
+}
+
+@media only screen and (max-height: 417px) and (orientation: landscape) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 6px !important;
+    line-clamp: 2 !important;
+    -webkit-line-clamp: 2 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 5px !important;
+    padding-top: 1.5px !important;
+    padding-bottom: 1.5px !important;
+  }
+}
+/* Ipad Mini*/
+@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 6px !important;
+    line-clamp: 1 !important;
+    -webkit-line-clamp: 1 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 3.1px !important;
+    padding-top: 1px !important;
+    padding-bottom: 1px !important;
+  }
+}
+
+@media only screen and (max-height: 772px) and (orientation: landscape) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 8px !important;
+    line-clamp: 2 !important;
+    -webkit-line-clamp: 2 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 5px !important;
+    padding-top: 1.5px !important;
+    padding-bottom: 1.5px !important;
+  }
+}
+/* Ipad Air*/
+@media only screen and (min-width: 820px) and (max-width: 1180px) and (orientation: portrait) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 8px !important;
+    line-clamp: 2 !important;
+    -webkit-line-clamp: 2 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 6px !important;
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+  }
+}
+
+@media only screen and (max-height: 1030px) and (orientation: landscape) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 12px !important;
+    line-clamp: 2 !important;
+    -webkit-line-clamp: 2 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 12px !important;
+    padding-top: 1.5px !important;
+    padding-bottom: 1.5px !important;
+  }
+}
+/* ipro*/
+@media only screen and (min-width: 1024px) and (max-width: 1366px) and (orientation: portrait) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 12px !important;
+    line-clamp: 2 !important;
+    -webkit-line-clamp: 2 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 12px !important;
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+  }
+}
+
+@media only screen and (max-height: 1368px) and (orientation: landscape) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 12px !important;
+    line-clamp: 2 !important;
+    -webkit-line-clamp: 2 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 15px !important;
+    padding-top: 1.5px !important;
+    padding-bottom: 1.5px !important;
+  }
+}
+/*  pr07*/
+@media only screen and (min-width: 912px) and (max-width: 1368px) and (orientation: portrait) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 9px !important;
+    line-clamp: 1 !important;
+    -webkit-line-clamp: 1 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 9px !important;
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+  }
+}
+
+@media only screen and (max-height: 918px) and (orientation: landscape) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 11px !important;
+    line-clamp: 2 !important;
+    -webkit-line-clamp: 2 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 12px !important;
+    padding-top: 1.5px !important;
+    padding-bottom: 1.5px !important;
+  }
+}
+
+@media only screen and (min-width: 344px) and (max-width: 882px) and (orientation: portrait) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 6px !important;
+    line-clamp: 1 !important;
+    -webkit-line-clamp: 1 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 3px !important;
+    padding-top: 1px !important;
+    padding-bottom: 1px !important;
+  }
+}
+
+@media only screen and (max-height: 349px) and (orientation: landscape) {
+  .trending-title,
+  .absolute.bottom-2.left-2.right-2 span {
+    font-size: 7px !important;
+    line-clamp: 2 !important;
+    -webkit-line-clamp: 2 !important;
+  }
+
+  .trending-category,
+  .absolute.top-2.left-2 .text-\[8px\],
+  .absolute.top-2.left-2 span {
+    font-size: 6px !important;
+    padding-top: 1.5px !important;
+    padding-bottom: 1.5px !important;
+  }
+}

@@ -1,0 +1,448 @@
+.bg-trend-post {
+  background-color: #333333;
+}
+.color-text-in-trend-post {
+  color: purple;
+}
+
+.trending-category .category-text-stack {
+  font-size: 15px !important;
+  font-weight: 600 !important;
+}
+
+.trending-category .category-text-normal {
+  font-size: 10px !important;
+  font-weight: 600 !important;
+}
+
+.my-masonry-grid {
+  display: flex;
+  width: 100%;
+  transition: opacity 0.2s ease-out;
+  margin-left: -8px; /* Offset for column padding */
+  margin-right: -8px; /* Offset for column padding */
+}
+
+.my-masonry-grid_column {
+  background-clip: padding-box;
+  padding-left: 8px;
+  padding-right: 8px;
+  flex: 1;
+  min-width: 0; /* Prevent flex items from overflowing */
+}
+
+.my-masonry-grid_column > div {
+  position: relative;
+  width: 100%;
+  margin-bottom: 16px;
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+  break-inside: avoid;
+  page-break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+}
+
+.my-masonry-grid_column > div:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.my-masonry-grid img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+}
+
+.screen-home-page-two-container {
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+.masonry-transition {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease-out;
+}
+
+.masonry-transition.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media only screen and (min-width: 1250px) {
+  .sidebar-visible {
+    display: block !important;
+  }
+}
+
+@media only screen and (max-width: 1249px) {
+  .sidebar-visible {
+    display: none !important;
+  }
+}
+
+.masonry-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  background: linear-gradient(
+    145deg,
+    rgba(18, 18, 18, 0.8),
+    rgba(34, 40, 49, 0.9)
+  );
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.masonry-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.05) 0%,
+    rgba(147, 51, 234, 0.05) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.masonry-card:hover::before {
+  opacity: 1;
+}
+
+.masonry-card:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25), 0 0 20px rgba(59, 130, 246, 0.15);
+}
+
+/* Completely disable ALL brick effects and animations for desktop screens */
+@media (min-width: 1024px) {
+  .my-masonry-grid[data-masonry-active="true"] .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    margin-bottom: 16px !important;
+  }
+
+  /* Disable masonry fade-in animation completely */
+  .masonry-card {
+    animation: none !important;
+  }
+
+  /* Remove ALL animation delays and staggering */
+  .my-masonry-grid_column:nth-child(1) > div,
+  .my-masonry-grid_column:nth-child(2) > div,
+  .my-masonry-grid_column:nth-child(3) > div,
+  .my-masonry-grid_column:nth-child(4) > div,
+  .my-masonry-grid_column:nth-child(5) > div,
+  .my-masonry-grid_column > div:nth-child(1),
+  .my-masonry-grid_column > div:nth-child(2),
+  .my-masonry-grid_column > div:nth-child(3),
+  .my-masonry-grid_column > div:nth-child(4),
+  .my-masonry-grid_column > div:nth-child(5),
+  .my-masonry-grid_column > div:nth-child(3n + 1),
+  .my-masonry-grid_column > div:nth-child(3n + 2),
+  .my-masonry-grid_column > div:nth-child(3n + 3) {
+    animation-delay: 0s !important;
+    animation: none !important;
+    margin-left: 0 !important;
+    margin-bottom: 16px !important;
+    transform: none !important;
+  }
+
+  /* Only allow hover effects, no layout shifts */
+  .my-masonry-grid_column > div:hover {
+    transform: translateY(-4px) scale(1.02) !important;
+  }
+}
+
+/* High-resolution screens - Apply stable logic like 1280x800 */
+/* 2400x1600 resolution */
+@media only screen and (width: 2400px) and (height: 1600px) {
+  .my-masonry-grid[data-masonry-active="true"] .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    margin-bottom: 16px !important;
+  }
+
+  .masonry-card {
+    animation: none !important;
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out !important;
+  }
+}
+
+/* 2400x1200 resolution */
+@media only screen and (width: 2400px) and (height: 1200px) {
+  .my-masonry-grid[data-masonry-active="true"] .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    margin-bottom: 16px !important;
+  }
+
+  .masonry-card {
+    animation: none !important;
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out !important;
+  }
+}
+
+/* 2560x1600 resolution */
+@media only screen and (width: 2560px) and (height: 1600px) {
+  .my-masonry-grid[data-masonry-active="true"] .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    margin-bottom: 16px !important;
+  }
+
+  .masonry-card {
+    animation: none !important;
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out !important;
+  }
+}
+
+/* 2880x1800 resolution */
+@media only screen and (width: 2880px) and (height: 1800px) {
+  .my-masonry-grid[data-masonry-active="true"] .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    margin-bottom: 16px !important;
+  }
+
+  .masonry-card {
+    animation: none !important;
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out !important;
+  }
+}
+
+/* Range-based media queries for similar high-resolution screens */
+@media only screen and (min-width: 2400px) and (max-width: 2880px) and (min-height: 1200px) and (max-height: 1800px) {
+  .my-masonry-grid[data-masonry-active="true"] .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    margin-bottom: 16px !important;
+  }
+
+  .masonry-card {
+    animation: none !important;
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out !important;
+  }
+}
+
+/* Specific fixes for problematic screen resolutions - Apply 1280x800 stable logic */
+/* 1366x1024 Resolution */
+@media screen and (width: 1366px) and (height: 1024px) {
+  .my-masonry-grid[data-masonry-active="true"] .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    margin-bottom: 16px !important;
+    opacity: 1 !important;
+  }
+
+  .masonry-card {
+    animation: none !important;
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out !important;
+  }
+
+  .masonry-card::before {
+    transition: opacity 0.3s ease !important;
+  }
+
+  .my-masonry-grid_column > div:hover {
+    transform: translateY(-4px) scale(1.02) !important;
+  }
+}
+
+/* 1600x1080 Resolution */
+@media screen and (width: 1600px) and (height: 1080px) {
+  .my-masonry-grid[data-masonry-active="true"] .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    margin-bottom: 16px !important;
+    opacity: 1 !important;
+  }
+
+  .masonry-card {
+    animation: none !important;
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out !important;
+  }
+
+  .masonry-card::before {
+    transition: opacity 0.3s ease !important;
+  }
+
+  .my-masonry-grid_column > div:hover {
+    transform: translateY(-4px) scale(1.02) !important;
+  }
+}
+
+/* 1080x1600 Resolution (Portrait) */
+@media screen and (width: 1080px) and (height: 1600px) {
+  .my-masonry-grid[data-masonry-active="true"] .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    margin-bottom: 16px !important;
+    opacity: 1 !important;
+  }
+
+  .masonry-card {
+    animation: none !important;
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out !important;
+  }
+
+  .masonry-card::before {
+    transition: opacity 0.3s ease !important;
+  }
+
+  .my-masonry-grid_column > div:hover {
+    transform: translateY(-4px) scale(1.02) !important;
+  }
+}
+
+/* 1900x1080 Resolution */
+@media screen and (width: 1900px) and (height: 1080px) {
+  .my-masonry-grid[data-masonry-active="true"] .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    margin-bottom: 16px !important;
+    opacity: 1 !important;
+  }
+
+  .masonry-card {
+    animation: none !important;
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out !important;
+  }
+
+  .masonry-card::before {
+    transition: opacity 0.3s ease !important;
+  }
+
+  .my-masonry-grid_column > div:hover {
+    transform: translateY(-4px) scale(1.02) !important;
+  }
+}
+
+/* 1080x1900 Resolution (Portrait) */
+@media screen and (width: 1080px) and (height: 1900px) {
+  .my-masonry-grid[data-masonry-active="true"] .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    margin-bottom: 16px !important;
+    opacity: 1 !important;
+  }
+
+  .masonry-card {
+    animation: none !important;
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out !important;
+  }
+
+  .masonry-card::before {
+    transition: opacity 0.3s ease !important;
+  }
+
+  .my-masonry-grid_column > div:hover {
+    transform: translateY(-4px) scale(1.02) !important;
+  }
+}
+
+/* Additional range-based media queries for similar resolutions */
+@media screen and (min-width: 1366px) and (max-width: 1366px) and (min-height: 1024px) and (max-height: 1024px) {
+  .my-masonry-grid[data-masonry-active="true"] .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    margin-bottom: 16px !important;
+    opacity: 1 !important;
+  }
+}
+
+@media screen and (min-width: 1600px) and (max-width: 1600px) and (min-height: 1080px) and (max-height: 1080px) {
+  .my-masonry-grid[data-masonry-active="true"] .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    margin-bottom: 16px !important;
+    opacity: 1 !important;
+  }
+}
+
+@media screen and (min-width: 1900px) and (max-width: 1900px) and (min-height: 1080px) and (max-height: 1080px) {
+  .my-masonry-grid[data-masonry-active="true"] .my-masonry-grid_column > div {
+    transform: none !important;
+    animation: none !important;
+    transition: box-shadow 0.3s ease-out !important;
+    margin-left: 0 !important;
+    margin-bottom: 16px !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Responsive masonry adjustments */
+@media (max-width: 1200px) {
+  .my-masonry-grid_column {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+  .my-masonry-grid_column > div {
+    margin-bottom: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .screen-home-page-two-container {
+    padding: 0;
+  }
+
+  .my-masonry-grid {
+    margin-left: -4px;
+    margin-right: -4px;
+  }
+
+  .my-masonry-grid_column {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  .my-masonry-grid_column > div {
+    margin-bottom: 8px;
+  }
+
+  .my-masonry-grid_column:nth-child(odd) > div:nth-child(even) {
+    transform: translateY(4px);
+  }
+
+  .my-masonry-grid_column:nth-child(even) > div:nth-child(odd) {
+    transform: translateY(-4px);
+  }
+}

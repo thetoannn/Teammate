@@ -1,0 +1,485 @@
+.hover-glow {
+  transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+
+@keyframes scalePulse {
+  0% {
+    transform: scale(0.9);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+.brand-home {
+  transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+  color: linear-gradient(to right, rgba(117, 21, 64, 1), rgb(234, 42, 128));
+  cursor: pointer;
+}
+
+.text-input-field {
+  color: #ffffff;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  text-align: justify;
+  line-height: 1.5;
+  word-spacing: 0.1em;
+}
+
+.bg-submit-input {
+  background-color: #db2777;
+}
+
+.border-input-field-color {
+  border-color: #758694;
+}
+
+.f-color-ai-list {
+  background-color: #26355d;
+}
+
+.f-color-ai-list:hover {
+  background-color: #f1d4d4;
+}
+
+.s-color-ai-list {
+  background-color: #4c1d95;
+}
+
+.s-color-ai-list:hover {
+  background-color: #e0d4f1;
+}
+
+.img-color-ai-list {
+  background-color: #059669;
+}
+
+.img-color-ai-list:hover {
+  background-color: #d1fae5;
+}
+
+.video-color-ai-list {
+  background-color: #dc2626;
+}
+
+.video-color-ai-list:hover {
+  background-color: #fecaca;
+}
+
+.tiktok-color-ai-list {
+  background-color: #000000;
+}
+
+.tiktok-color-ai-list:hover {
+  background-color: #f3f4f6;
+}
+
+.youtube-color-ai-list {
+  background-color: #dc2626;
+}
+
+.youtube-color-ai-list:hover {
+  background-color: #fecaca;
+}
+
+.google-color-ai-list {
+  background-color: #1f2937;
+}
+
+.google-color-ai-list:hover {
+  background-color: #f3f4f6;
+}
+
+.shopee-color-ai-list {
+  background-color: #ea580c;
+}
+
+.shopee-color-ai-list:hover {
+  background-color: #fed7aa;
+}
+
+.media-color-ai-list {
+  background-color: #7c2d12;
+}
+
+.media-color-ai-list:hover {
+  background-color: #fef3c7;
+}
+
+.bg-gradient-new-label {
+  background: linear-gradient(135deg, #db2777 0%, #e73058 100%);
+}
+
+.bg-gradient-coming-soon-label {
+  background: linear-gradient(90deg, #DB2777 16.83%, #E73058 58.41%, #4374FF 100%);
+}
+
+.w-17 {
+  width: 4.25rem;
+}
+
+.h-17 {
+  height: 4.25rem;
+}
+
+.bg-gradient-pink-blue {
+  background: linear-gradient(180deg, #ec4899 0%, #153885 100%);
+}
+
+.bg-gradient-purple-orange {
+  background: linear-gradient(180deg, #7b2cbf 0%, #ff4f03 100%);
+}
+
+.icon-stack-container {
+  position: relative;
+  width: 107px;
+  height: 55px;
+  isolation: isolate;
+}
+.right-icon-group {
+  right: -20px;
+  position: relative;
+}
+.left-icon-group {
+  left: -19px;
+  position: relative;
+}
+.stack-icon {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease-in-out;
+  will-change: transform, z-index;
+  transform-origin: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.stack-icon.youtube {
+  width: 39px;
+  height: 39px;
+  background: white;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 500;
+}
+
+.stack-icon.youtube:hover {
+  transform: translateX(-50%) scale(1.15);
+}
+
+.stack-icon.instagram {
+  width: 20px;
+  height: 20px;
+  background: #1f7d53;
+  top: 19px;
+  left: 0;
+  z-index: 300;
+}
+
+.stack-icon.twitter {
+  width: 27px;
+  height: 27px;
+  background: #27391c;
+  top: 11px;
+  left: 13px;
+  z-index: 350;
+}
+
+.stack-icon.threads {
+  width: 34px;
+  height: 34px;
+  background: #18230f;
+  top: 5px;
+  left: 34px;
+  z-index: 400;
+}
+
+.stack-icon.tiktok {
+  width: 34px;
+  height: 34px;
+  background: #222222;
+  top: 5px;
+  right: 34px;
+  z-index: 400;
+}
+
+.stack-icon.wordpress {
+  width: 27px;
+  height: 27px;
+  background: linear-gradient(180deg, #7b2cbf 0%, #ff4f03 100%);
+  top: 11px;
+  right: 13px;
+  z-index: 350;
+}
+
+.stack-icon.word {
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(180deg, #ec4899 0%, #153885 100%);
+  top: 19px;
+  right: 0;
+  z-index: 300;
+}
+
+.stack-icon:hover {
+  z-index: 1000 !important;
+  transform: scale(1.15);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.icon-group {
+  gap: 0;
+  transition: all 0.5s ease-in-out;
+}
+
+.icon-group-spaced {
+  gap: 20px !important;
+}
+
+.icon-group-stacked {
+  gap: 0 !important;
+}
+
+.left-group-animate .stack-icon.instagram {
+  left: -47px;
+}
+
+.left-group-animate .stack-icon.twitter {
+  left: -14px;
+}
+
+.left-group-animate .stack-icon.threads {
+  left: 24px;
+}
+
+.right-group-animate .stack-icon.tiktok {
+  right: 24px;
+}
+
+.right-group-animate .stack-icon.wordpress {
+  right: -14px;
+}
+
+.right-group-animate .stack-icon.word {
+  right: -47px;
+}
+
+.left-group-animate {
+  transform: translateX(-20px) !important;
+}
+
+.right-group-animate {
+  transform: translateX(20px) !important;
+}
+.stack-icon {
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.button-moved img {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease-in-out;
+}
+
+.trending-line {
+  width: 45px;
+  height: 1px;
+}
+
+.trending-line path {
+  stroke: url(#gradient);
+  stroke-opacity: 0.6;
+}
+
+.dark .trending-line {
+  transform: rotate(180deg);
+}
+
+.button-moved img {
+  transform: rotate(180deg) !important;
+  transition: none !important;
+}
+
+.my-masonry-grid {
+  margin-bottom: 10px !important;
+}
+.f-postion {
+  margin-top: 10px !important;
+}
+.text-new-resize {
+  font-size: 12px !important;
+}
+.round-trend-tit {
+  padding-top: 0.1px;
+}
+.sidebar-footer {
+  margin-top: auto !important;
+}
+.mkt-button {
+  cursor: pointer !important;
+}
+
+/* Research Split Scrollbar - Custom styling to respect rounded borders */
+.research-split-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e0 transparent;
+}
+
+.research-split-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.research-split-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 8px 0;
+}
+
+.research-split-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #cbd5e0;
+  border-radius: 3px;
+  border: 1px solid transparent;
+}
+
+.research-split-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #a0aec0;
+}
+
+.research-split-scrollbar::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Chat Field Split Mode Scrollbar - Only applies when split is active */
+.chat-field-split-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: gray transparent;
+}
+
+.chat-field-split-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-field-split-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 3px;
+}
+
+.chat-field-split-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #cbd5e0;
+  border-radius: 3px;
+  border: 1px solid transparent;
+}
+
+.chat-field-split-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #a0aec0;
+}
+.chat-field-split-scrollbar::-webkit-scrollbar-button {
+  display: none !important;
+}
+
+.chat-field-split-scrollbar::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Chat Field Main Mode Scrollbar - Default behavior when no split */
+.chat-field-main-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: gray transparent;
+}
+
+.chat-field-main-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-field-main-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 3px;
+}
+
+.chat-field-main-scrollbar::-webkit-scrollbar-thumb {
+  background-color: gray;
+  border-radius: 3px;
+  border: 1px solid transparent;
+}
+
+.chat-field-main-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #a0aec0;
+}
+
+.chat-field-main-scrollbar::-webkit-scrollbar-corner {
+  background: transparent;
+}
+/* Text formatting utilities for chat */
+.chat-text-format {
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  text-align: justify;
+  line-height: 1.6;
+
+  white-space: pre-wrap;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.chat-input-format {
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  line-height: 1.5;
+
+  white-space: pre-wrap;
+  resize: none;
+  overflow: hidden;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.chat-message-format {
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  text-align: justify;
+  line-height: 1.8;
+
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Prevent text overflow in containers */
+.no-overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Enhanced text wrapping for long words */
+.enhanced-wrap {
+  word-wrap: break-word;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+}
+
+/* Responsive text sizing */
+.responsive-text {
+  font-size: clamp(13px, 2vw, 16px);
+  line-height: 1.6;
+}

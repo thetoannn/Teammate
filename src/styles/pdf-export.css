@@ -1,0 +1,35 @@
+.pdf-export-content .text-white\/60 {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.pdf-export-content .text-white\/70 {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.pdf-export-content .text-white\/40 {
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.pdf-export-content .text-white\/90 {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.pdf-export-content .bg-\[#FFFFFF\]\/10 {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.pdf-export-content .bg-\[#FFFFFF\]\/20 {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.pdf-export-content .border-\[#FFFFFF\]\/10 {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.pdf-export-content .border-white\/10 {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.pdf-export-content .uppercase {
+  text-transform: uppercase !important;
+}

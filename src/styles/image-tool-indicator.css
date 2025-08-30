@@ -1,0 +1,106 @@
+/* Image Tool Indicator Loading Animations */
+@keyframes imageToolFade {
+  0% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes imageToolPulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes imageToolColorFade {
+  0% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: 100% 0;
+  }
+}
+
+@keyframes imageToolSweep {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+.image-tool-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.image-tool-loading::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 20%,
+    rgba(255, 255, 255, 0.2) 40%,
+    rgba(255, 255, 255, 0.2) 60%,
+    rgba(255, 255, 255, 0.1) 80%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: imageToolSweep 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.image-tool-loading-text {
+  background: linear-gradient(
+    90deg,
+    #faf9ee 0%,
+    #ffffff 25%,
+    #ffffff 50%,
+    #ffffff 75%,
+    #faf9ee 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: imageToolColorFade 2s ease-in-out infinite;
+  color: transparent !important;
+}
+
+.image-tool-loading-icon {
+  animation: imageToolPulse 1.5s ease-in-out infinite;
+}
+
+.image-tool-loading-container {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.image-tool-default {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+}
+
+.image-tool-default-text {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  -webkit-text-fill-color: unset !important;
+  animation: none !important;
+  color: inherit !important;
+}
