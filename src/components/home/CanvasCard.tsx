@@ -25,13 +25,11 @@ const CanvasCard: React.FC<CanvasCardProps> = ({
   const { t } = useTranslation()
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
-  // ✅ Chốt an toàn: chặn click ngay sau khi dialog đóng
   const [blockClick, setBlockClick] = useState(false)
   const unblockTimer = useRef<number | null>(null)
 
   useEffect(() => {
     if (!showDeleteDialog) {
-      // Dialog vừa đóng → chặn click ngắn hạn
       setBlockClick(true)
       if (unblockTimer.current) window.clearTimeout(unblockTimer.current)
       unblockTimer.current = window.setTimeout(() => setBlockClick(false), 180)
@@ -49,7 +47,7 @@ const CanvasCard: React.FC<CanvasCardProps> = ({
     } catch (error) {
       toast.error(t('canvas:messages.failedToDelete'))
     }
-    setShowDeleteDialog(false) // sẽ kích hoạt blockClick qua useEffect
+    setShowDeleteDialog(false)
   }
 
   return (
@@ -64,7 +62,6 @@ const CanvasCard: React.FC<CanvasCardProps> = ({
         cursor-pointer relative group
         transition-all duration-200 hover:scale-105 hover:border-gray-400 hover:bg-gray-800/20
       "
-      // Nếu đang blockClick thì chặn bắt đầu pointer để không tạo click mới
       onPointerDown={(e) => {
         if (blockClick) e.stopPropagation()
       }}
@@ -80,7 +77,7 @@ const CanvasCard: React.FC<CanvasCardProps> = ({
           type="button"
           aria-label="Delete canvas"
           className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white z-20"
-          onPointerDown={(e) => e.stopPropagation()} // không “rơi” xuống card
+          onPointerDown={(e) => e.stopPropagation()}
           onClick={(e) => {
             e.stopPropagation()
             setShowDeleteDialog(true)
@@ -121,7 +118,6 @@ const CanvasCard: React.FC<CanvasCardProps> = ({
           {canvas.name || 'Untitled'} – {formatDate(canvas.created_at)}
         </div>
 
-        {/* Overlay hover: KHÔNG bắt sự kiện */}
         <div className="pointer-events-none absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-200" />
       </div>
     </motion.div>
