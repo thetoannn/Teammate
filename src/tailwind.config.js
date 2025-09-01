@@ -68,10 +68,26 @@ module.exports = {
       spacing: {
         "sidebar-padding": "13px",
       },
+      scrollbar: {
+        thin: {
+          'scrollbar-width': 'thin',
+          '&::-webkit-scrollbar': {
+            width: '4px', // Change to 4px for thinner scrollbar
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: '#4b5563', // Custom thumb color
+            borderRadius: '10px',
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: '#1f2937', // Custom track color
+          },
+        },
+      },
     },
   },
   plugins: [
     require("tailwindcss-textshadow"),
+    require('tailwind-scrollbar'),
     function ({ addVariant }) {
       addVariant("sidebar-visible", "&.sidebar-visible");
     },

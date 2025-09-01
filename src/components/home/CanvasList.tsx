@@ -59,10 +59,7 @@ const CanvasList: React.FC = () => {
   if (!canvases?.length) return null;
 
   return (
-    <section
-      className="w-full text-white -mx-4 px-4"
-      style={{ width: "calc(100% + 2rem)" }}
-    >
+    <section className="w-full text-white ">
       <div className="mb-6 pr-6 flex items-center justify-between">
         <motion.h2
           className="text-xl text-left"
@@ -78,7 +75,7 @@ const CanvasList: React.FC = () => {
             aria-label="Prev"
             onClick={() => emblaApi?.scrollPrev()}
             disabled={!canScrollPrev}
-            className="h-7 w-7 grid place-items-center rounded-md border border-white/20 text-white/80 hover:text-white hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="cursor-pointer h-7 w-7 grid place-items-center rounded-md border border-white/20 text-white/80 hover:text-white hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             ‹
           </button>
@@ -86,7 +83,7 @@ const CanvasList: React.FC = () => {
             aria-label="Next"
             onClick={() => emblaApi?.scrollNext()}
             disabled={!canScrollNext}
-            className="h-7 w-7 grid place-items-center rounded-md border border-white/20 text-white/80 hover:text-white hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="cursor-pointer h-7 w-7 grid place-items-center rounded-md border border-white/20 text-white/80 hover:text-white hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             ›
           </button>
@@ -94,12 +91,12 @@ const CanvasList: React.FC = () => {
       </div>
 
       <AnimatePresence>
-        <div className="mx-auto max-w-full md:max-w-[calc(5*230px+4*32px)] xl:max-w-[calc(7*230px+6*32px)]">
+        <div className="mx-auto">
           <div
             ref={emblaRef}
             role="region"
             aria-label="Canvas slider"
-            className="overflow-hidden hover:overflow-x-auto pb-2"
+            className="overflow-x-auto pb-2 overflow-y-hidden thin-x-scrollbar"
             style={{ touchAction: "pan-y" }}
           >
             <div className="flex gap-8">
@@ -107,16 +104,16 @@ const CanvasList: React.FC = () => {
                 <div
                   key={canvas.id}
                   className="
-                  flex-shrink-0 w-[230px] h-[150px]
-                  [&>*]:w-full [&>*]:h-full
-                  [&>*]:rounded-xl
-                  [&>*]:overflow-hidden
-                  [&>*]:bg-[#2a2a2a]
-                  [&>*]:border [&>*]:border-white/20
-                  hover:[&>*]:border-gray-400 hover:[&>*]:bg-gray-800/20
-                  transition-all duration-200 hover:scale-105
-                  relative group cursor-pointer
-                "
+              flex-shrink-0 basis-1/7 max-w-1/7 h-[150px]
+              [&>*]:w-full [&>*]:h-full 
+              [&>*]:rounded-xl
+              [&>*]:overflow-hidden
+              [&>*]:bg-[#2a2a2a]
+              [&>*]:border [&>*]:border-white/20
+              hover:[&>*]:border-gray-400 hover:[&>*]:bg-gray-800/20
+              transition-all duration-200 hover:scale-105
+              relative group cursor-pointer
+            "
                   onClick={() => handleCanvasClick(canvas.id)}
                   onDragStart={(e) => e.preventDefault()}
                 >

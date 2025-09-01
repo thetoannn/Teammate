@@ -427,11 +427,11 @@ const ModelSelectorV3: React.FC<ModelSelectorV3Props> = ({
           maxWidth: "40%",
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
+          justifyContent: "center",
           overflow: "hidden",
           backgroundColor: autoMode ? "#f0fdf4" : "transparent",
           borderColor: autoMode ? "#bdccf7ff" : "#656262",
-          color: autoMode ? "#507aeeff" : "#8c8c8c",
+          color: autoMode ? "#507aeeff" : "#fff",
         }}
         icon={
           autoMode ? (

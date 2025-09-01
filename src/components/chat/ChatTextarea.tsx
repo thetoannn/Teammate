@@ -23,6 +23,8 @@ import {
   RectangleVertical,
   ChevronDown,
   Hash,
+  Paperclip,
+  Send,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Textarea, { TextAreaRef } from "rc-textarea";
@@ -79,7 +81,7 @@ const ChatTextarea: React.FC<ChatTextareaProps> = ({
   >([]);
   const [isFocused, setIsFocused] = useState(false);
   const [selectedAspectRatio, setSelectedAspectRatio] =
-    useState<string>("auto");
+    useState<string>("Tự động");
   const [quantity, setQuantity] = useState<number>(1);
   const [showQuantitySlider, setShowQuantitySlider] = useState(false);
   const quantitySliderRef = useRef<HTMLDivElement>(null);
@@ -377,7 +379,7 @@ const ChatTextarea: React.FC<ChatTextareaProps> = ({
     <motion.div
       ref={dropAreaRef}
       className={cn(
-        "w-full flex flex-col items-center border border-primary/20 rounded-2xl p-3 hover:border-primary/40 transition-all duration-300 cursor-text gap-5 bg-background/80 backdrop-blur-xl relative",
+        "w-full flex flex-col items-center border border-primary/20 rounded-[20px] p-3 hover:border-primary/40 transition-all duration-300 cursor-text gap-5 bg-background/80 backdrop-blur-xl relative",
         isFocused && "border-primary/40",
         className
       )}
@@ -485,7 +487,7 @@ const ChatTextarea: React.FC<ChatTextareaProps> = ({
             size="sm"
             onClick={() => imageInputRef.current?.click()}
           >
-            <PlusIcon className="size-4" />
+            <Paperclip className="size-4" />
           </Button>
 
           <ModelSelectorV3 />
@@ -499,12 +501,12 @@ const ChatTextarea: React.FC<ChatTextareaProps> = ({
                 size={"sm"}
               >
                 <RectangleVertical className="size-4" />
-                <span className="text-sm">{selectedAspectRatio}</span>
+                <span className="text-[12px]">{selectedAspectRatio}</span>
                 <ChevronDown className="size-3 opacity-50" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-32">
-              {["Auto", "1:1", "4:3", "3:4", "16:9", "9:16"].map((ratio) => (
+              {["Tự động", "1:1", "4:3", "3:4", "16:9", "9:16"].map((ratio) => (
                 <DropdownMenuItem
                   key={ratio}
                   onClick={() => setSelectedAspectRatio(ratio)}
@@ -600,7 +602,7 @@ const ChatTextarea: React.FC<ChatTextareaProps> = ({
             onClick={handleSendPrompt}
             disabled={!textModel || !selectedTools || prompt.length === 0}
           >
-            <ArrowUp className="size-4" />
+            <Send className="size-4" />
           </Button>
         )}
       </div>

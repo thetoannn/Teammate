@@ -50,3 +50,27 @@ h4 {
 .mdxeditor ol ol {
   margin-left: 1.5rem; /* Indent nested lists */
 }
+/* Thin HORIZONTAL scrollbar for the slider viewport */
+@layer utilities {
+  .thin-x-scrollbar {
+    scrollbar-width: thin;                    /* thin | none | auto */
+    scrollbar-color: rgba(255,255,255,.35) transparent;
+  }
+  .thin-x-scrollbar::-webkit-scrollbar {
+    height: 6px;                              
+  }
+  .thin-x-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .thin-x-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(255,255,255,.35);
+    border-radius: 9999px;
+  }
+  .thin-x-scrollbar:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(255,255,255,.6);
+  }
+
+  /* (Tuỳ chọn) Ẩn tới khi hover */
+  .scrollbar-invisible::-webkit-scrollbar-thumb { background-color: transparent; }
+  .scrollbar-invisible:hover::-webkit-scrollbar-thumb { background-color: rgba(255,255,255,.35); }
+}

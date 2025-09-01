@@ -105,7 +105,7 @@ const CanvasCard: React.FC<CanvasCardProps> = ({
                 : `${BASE_API_URL}${canvas.thumbnail}`
             }
             alt={canvas.name}
-            className="w-full h-full object-cover select-none pointer-events-none"
+            className="w-full h-full object-contain select-none pointer-events-none"
             draggable={false}
           />
         ) : (
